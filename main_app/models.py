@@ -20,7 +20,7 @@ class Member(models.Model):
 
 #Expenses
 class Expense(models.Model):
-    member = models.CharField(max_length=100)
+    member = models.ForeignKey(Member, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     cost = models.FloatField(blank=True, default=None)
     date = models.DateField()
