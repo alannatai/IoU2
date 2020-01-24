@@ -7,16 +7,16 @@ class Household(models.Model):
     name = models.CharField(max_length=50)
 
     def __str__(self):
-        return self.name
+        return f"Household: {self.name}"
 
 #Users
 class Member(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     household = models.ManyToManyField(Household)
     # budgetb
-    
+
     def __str__(self):
-        return self.name
+        return f"Member: {self.name}""
 
 #Expenses
 class Expense(models.Model):
@@ -37,4 +37,4 @@ class Split(models.Model):
     expense = models.ForeignKey(Expense, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"You owe {lender_name} ${expense_cost}."
+        return f"{self.member} needs to pay ${self.amount_owed} for {self.expense.name}."
