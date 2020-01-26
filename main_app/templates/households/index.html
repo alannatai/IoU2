@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>{{ user }}'s Households</h1>
+
+{% for household in households %}
+
+{{ household.name }}
+
+{% endfor %}
+
+{% endblock %}
