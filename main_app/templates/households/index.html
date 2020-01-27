@@ -5,10 +5,22 @@
 
 <a href="{% url 'households_create' %}">Add Household</a>
 
-{% for household in households %}
+<div class="row">
+  <div class="col s12 m6">
+    {% for household in households %}
+    <div class="card">
+      <div class="card-content">
+        <span class="card-title">{{ household.name }}</span>
+      </div>
+      <div class="card-action">
+        <a href="{% url 'household_details' household.id %}">Details</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
 
-{{ household.name }}
 
-{% endfor %}
+
 
 {% endblock %}
