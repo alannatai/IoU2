@@ -6,7 +6,7 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import HouseholdForm, ExpenseForm
 
-from .models import Household, Member, Expense
+from .models import Household, Member, Expense, Split
 
 def home(request):
     return render(request, 'index.html')
@@ -84,7 +84,7 @@ def signup(request):
 # def delete_household(request):
 #     households = Household.objects.filter()
 #     return render(request, households/index.html",{
-        
+
 #     })
 
 class HouseholdCreate(LoginRequiredMixin, CreateView):
@@ -106,4 +106,10 @@ def add_expense(request, household_id):
         new_expense.member_id = member.id
         new_expense.household_id = household_id
         new_expense.save()
+        household_members = new_expense.household.member.exclude(user=request.user)
+        AMOUNTOWED = new_expense.cost / (household_members.count() + 1)
+        for member in household_members:
+            new_split = Split(amount_owed=AMOUNTOWED, member=member, expense=new_expense)
+            print(new_split)
+            new_split.save()
     return redirect('households_details', household_id=household_id)
