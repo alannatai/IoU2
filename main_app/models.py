@@ -6,13 +6,15 @@ from datetime import datetime
 
 class Household(models.Model):
     name = models.CharField(max_length=50)
+    # need this to be able to edit on both ends
+    member = models.ManyToManyField('Member', through='Member_household', related_name="members")
 
     def __str__(self):
         return f"Household: {self.name}"
 
 class Member(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    household = models.ManyToManyField(Household)
+    household = models.ManyToManyField(Household, related_name="households")
     # budgetb
 
     def __str__(self):
@@ -43,6 +45,7 @@ class Split(models.Model):
     amount_owed = models.FloatField()
     member = models.ForeignKey(Member, on_delete=models.CASCADE)
     expense = models.ForeignKey(Expense, on_delete=models.CASCADE)
+    has_paid = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.member.user.username} needs to pay ${self.amount_owed} for {self.expense.name}."
