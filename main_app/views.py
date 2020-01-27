@@ -48,6 +48,12 @@ def signup(request):
     context = {'form': form, 'error_message': error_message}
     return render(request, 'registration/signup.html', context)
 
+def delete_household(request):
+    households = Household.objects.filter()
+    return render(request, households/index.html",{
+        
+    })
+
 class HouseholdCreate(LoginRequiredMixin, CreateView):
     model = Household
     fields = ['name']
