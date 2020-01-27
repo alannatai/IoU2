@@ -3,6 +3,8 @@
 
 <h1>{{ user }}'s Households</h1>
 
+<a href="{% url 'households_create' %}">Add Household</a>
+
 {% for household in households %}
 
 {{ household.name }}
