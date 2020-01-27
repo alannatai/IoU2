@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .models import Household
+from .models import Household, Member
 
 def home(request):
     return render(request, 'index.html')
@@ -16,7 +16,6 @@ def about(request):
 
 @login_required
 def households_index(request):
-    print(request.user.id)
     households = Household.objects.filter(member=request.user.id)
     return render(request, 'households/index.html', {
         'user': request.user,
@@ -48,11 +47,16 @@ def signup(request):
     context = {'form': form, 'error_message': error_message}
     return render(request, 'registration/signup.html', context)
 
-def delete_household(request):
-    households = Household.objects.filter()
-    return render(request, households/index.html",{
+# def delete_household(request):
+#     households = Household.objects.filter()
+#     return render(request, households/index.html",{
         
-    })
+#     })
+
+@login_required
+def assoc_household(request, member_id, household_id):
+  Member.objects.get(id=member_id).household.add(household_id)
+  return redirect('households/')
 
 class HouseholdCreate(LoginRequiredMixin, CreateView):
     model = Household
@@ -60,5 +64,6 @@ class HouseholdCreate(LoginRequiredMixin, CreateView):
     success_url = '/households/'
 
     def form_valid(self, form):
-        form.instance.user = self.request.user
+        new_household = form.save()
+        Member.objects.get(user__id=self.request.user.id).household.add(new_household.id)
         return super().form_valid(form)
