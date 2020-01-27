@@ -17,7 +17,7 @@
           <p>{{ expense.date }}</p>
         </div>
         <div class="card-action">
-          <a href="{% url 'expense_details' household.id expense.id %}">Details</a>
+          <a href="{% url 'expenses_details' household.id expense.id %}">Details</a>
         </div>
       </div>
       {% endfor %}

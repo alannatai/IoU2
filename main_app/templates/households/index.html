@@ -2,10 +2,7 @@
 
 <h1>{{ user }}'s Households</h1>
 
-<<<<<<< HEAD
-{% for household in households %} {{ household.name }} {% endfor %} {% endblock
-%}
-=======
+<a href="{% url 'households_create' %}">Add Household</a>
 
 <div class="row">
   <div class="col s12 m6">
@@ -15,15 +12,11 @@
         <span class="card-title">{{ household.name }}</span>
       </div>
       <div class="card-action">
-        <a href="{% url 'household_details' household.id %}">Details</a>
+        <a href="{% url 'households_details' household.id %}">Details</a>
       </div>
     </div>
     {% endfor %}
   </div>
 </div>
 
-
-
-
 {% endblock %}
->>>>>>> 0b49eb15adb3a4654c11d5b8abf32fec30529eca
