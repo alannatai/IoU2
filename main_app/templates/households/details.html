@@ -3,7 +3,6 @@
 
 <h1>{{ household.name }}</h1>
 
-
 <div class="row">
   <div class="col s12 m6">
     {% if household.expense_set.all|length > 0 %}
@@ -17,12 +16,14 @@
           <p>{{ expense.date }}</p>
         </div>
         <div class="card-action">
-          <a href="{% url 'expenses_details' household.id expense.id %}">Details</a>
+          <a href="{% url 'expense_details' household.id expense.id %}"
+            >Details</a
+          >
         </div>
       </div>
       {% endfor %}
     {% else %}
-      <h2>No expenses</h2>
+    <h2>No expenses</h2>
     {% endif %}
   </div>
 </div>

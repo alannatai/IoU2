@@ -1,0 +1,28 @@
+{% extends 'base.html' %} {% block content %}
+
+<h1>Edit {{ expense.name }} </h1>
+
+<div class="row">
+    <div class="col s12 m6">
+    <div class="card">
+    <div class="card-content">
+    <span class="card-title">{{ expense.name }}</span>
+    {% if expense.length == 0 %}
+    <p>Add an expense</p>
+    {% else %}
+    <p>Edit {{ expense.name }}</p>
+    <form action="/" method="get">
+        {% csrf_token %}
+        Name: <input type="name" name="name"><br>
+        Total Cost: <input type="float" name="cost"><br>
+        Date: <input type="text" name="cost"><br>
+    <input type="submit" value="Submit">
+    </form>
+
+    </div>
+    <div class="card-action"></div>
+    </div>
+    </div>
+</div>
+
+{% endblock %}

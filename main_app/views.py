@@ -17,10 +17,10 @@ def about(request):
 @login_required
 def households_index(request):
     print(request.user.id)
-    households = Household.objects.filter(member=request.user.id)
+    member = Member.objects.get(user = request.user.id)
     return render(request, 'households/index.html', {
         'user': request.user,
-        'households': households
+        'member': member
     })
 
 @login_required
@@ -31,8 +31,20 @@ def households_details(request, household_id):
         'household': household
     })
 
-def expenses_details(request, household_id, expense_id):
-    pass
+@login_required
+def create_expense(request, household_id, user):
+    household = Household.objects.get(pk=household_id)
+    user = request.user
+
+def expense_details(request, household_id, expense_id):
+    expense = Expense.objects.get(id=expense_id)
+    return render(request, 'expense/details.html', {
+        'user': request.user,
+        'expense': expense / expense.household.member_set.count
+    })
+
+def new_expense(request):
+    return render(request, 'expense/new.html')
 
 def signup(request):
     error_message = ''
@@ -48,11 +60,11 @@ def signup(request):
     context = {'form': form, 'error_message': error_message}
     return render(request, 'registration/signup.html', context)
 
-def delete_household(request):
-    households = Household.objects.filter()
-    return render(request, households/index.html",{
+# def delete_household(request):
+#     households = Household.objects.filter()
+#     return render(request, households/index.html",{
         
-    })
+#     })
 
 class HouseholdCreate(LoginRequiredMixin, CreateView):
     model = Household
