@@ -36,7 +36,7 @@ class Expense(models.Model):
     household = models.ForeignKey(Household, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.who_paid} bought {self.name} for {self.cost}"
+        return f"{self.member.user.username} bought {self.name} for {self.cost}"
 
 class Split(models.Model):
     amount_owed = models.FloatField()
@@ -44,4 +44,4 @@ class Split(models.Model):
     expense = models.ForeignKey(Expense, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.member} needs to pay ${self.amount_owed} for {self.expense.name}."
+        return f"{self.member.user.username} needs to pay ${self.amount_owed} for {self.expense.name}."
