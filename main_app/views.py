@@ -61,7 +61,7 @@ def expenses_detail(request, household_id, expense_id):
     expense = Expense.objects.get(id=expense_id)
     return render(request, 'expense/details.html', {
         'user': request.user,
-        'expense': expense / expense.household.member_set.count
+        'expense': expense 
     })
 
 def new_expense(request):
