@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import ExpenseForm
+from .forms import HouseholdForm, ExpenseForm
 
 from .models import Household, Member, Expense
 
@@ -61,7 +61,7 @@ def expenses_detail(request, household_id, expense_id):
     expense = Expense.objects.get(id=expense_id)
     return render(request, 'expense/details.html', {
         'user': request.user,
-        'expense': expense / expense.household.member_set.count
+        'expense': expense 
     })
 
 def new_expense(request):
