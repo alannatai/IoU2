@@ -2,9 +2,15 @@
 {% block content %}
 
 <h1>{{ household.name }}</h1>
+<form action="{% url 'add_expense' household.id %}" method="post">
+    {% csrf_token %}
+    {{ expense_form.as_p }}
+    <input type="submit" class="btn" value="Add Expense">
+</form>
 
 <div class="row">
   <div class="col s12 m6">
+    <a class="waves-effect waves-light btn orange accent-2" href="" style="width: 100%">Add Expense</a>
     {% if household.expense_set.all|length > 0 %}
       {% for expense in household.expense_set.all %}
       <div class="card">
@@ -16,7 +22,7 @@
           <p>{{ expense.date }}</p>
         </div>
         <div class="card-action">
-          <a href="{% url 'expense_details' household.id expense.id %}"
+          <a href="{% url 'expenses_detail' household.id expense.id %}"
             >Details</a
           >
         </div>
@@ -25,6 +31,10 @@
     {% else %}
     <h2>No expenses</h2>
     {% endif %}
+  </div>
+  <div class="col s12 m6">
+    <a class="waves-effect waves-light btn" href="{% url 'households_update' household.id %}">Edit Household</a>
+
   </div>
 </div>
 

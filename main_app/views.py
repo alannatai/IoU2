@@ -2,33 +2,54 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from .forms import ExpenseForm
 
-from .models import Household
+from .models import Household, Member, Expense
 
 def home(request):
     return render(request, 'index.html')
-    
+
 def about(request):
     return render(request, 'about.html')
 
-
 @login_required
 def households_index(request):
-    print(request.user.id)
-    member = Member.objects.get(user = request.user.id)
+    member = Member.objects.get(user=request.user.id)
+    households = Household.objects.filter(member=member.id)
     return render(request, 'households/index.html', {
         'user': request.user,
-        'member': member
+        'households': households
     })
 
 @login_required
 def households_details(request, household_id):
     household = Household.objects.get(pk=household_id)
+    expense_form = ExpenseForm()
     return render(request, 'households/details.html', {
         'user': request.user,
-        'household': household
+        'household': household,
+        'expense_form': expense_form
+    })
+
+@login_required
+def households_update(request, household_id):
+    if request.method == "POST":
+        household = Household.objects.get(pk=household_id)
+        form = HouseholdForm(request.POST, instance=household)
+        # validate the form
+        if form.is_valid():
+            form.save()
+        return redirect('households_details', household_id=household_id)
+    household = Household.objects.get(id=household_id)
+    household_form = HouseholdForm(initial={
+        "name": household.name,
+        "member": household.member.all()
+    })
+    return render(request, 'households/update.html', {
+        # pass the cat and feeding_form as context
+        'household': household, 'household_form': household_form
     })
 
 @login_required
@@ -36,7 +57,7 @@ def create_expense(request, household_id, user):
     household = Household.objects.get(pk=household_id)
     user = request.user
 
-def expense_details(request, household_id, expense_id):
+def expenses_detail(request, household_id, expense_id):
     expense = Expense.objects.get(id=expense_id)
     return render(request, 'expense/details.html', {
         'user': request.user,
@@ -72,5 +93,17 @@ class HouseholdCreate(LoginRequiredMixin, CreateView):
     success_url = '/households/'
 
     def form_valid(self, form):
-        form.instance.user = self.request.user
+        new_household = form.save()
+        Member.objects.get(user__id=self.request.user.id).household.add(new_household.id)
         return super().form_valid(form)
+
+@login_required
+def add_expense(request, household_id):
+    form = ExpenseForm(request.POST)
+    if form.is_valid():
+        member = Member.objects.get(user__id=request.user.id)
+        new_expense = form.save(commit=False)
+        new_expense.member_id = member.id
+        new_expense.household_id = household_id
+        new_expense.save()
+    return redirect('households_details', household_id=household_id)
