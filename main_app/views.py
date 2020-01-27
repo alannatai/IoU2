@@ -6,6 +6,7 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Household, Member
+from .forms import HouseholdForm
 
 def home(request):
     return render(request, 'index.html')
@@ -18,8 +19,6 @@ def about(request):
 def households_index(request):
     member = Member.objects.get(user=request.user.id)
     households = Household.objects.filter(member=member.id)
-    print('request.user.id', request.user.id)
-    print('households', households)
     return render(request, 'households/index.html', {
         'user': request.user,
         'households': households
@@ -31,6 +30,25 @@ def households_details(request, household_id):
     return render(request, 'households/details.html', {
         'user': request.user,
         'household': household
+    })
+
+@login_required
+def households_update(request, household_id):
+    if request.method == "POST":
+        household = Household.objects.get(pk=household_id)
+        form = HouseholdForm(request.POST, instance=household)
+        # validate the form
+        if form.is_valid():
+            form.save()
+        return redirect('households_details', household_id=household_id)
+    household = Household.objects.get(id=household_id)
+    household_form = HouseholdForm(initial={
+        "name": household.name,
+        "member": household.member.all()
+    })
+    return render(request, 'households/update.html', {
+        # pass the cat and feeding_form as context
+        'household': household, 'household_form': household_form
     })
 
 def expenses_details(request, household_id, expense_id):
@@ -70,7 +88,3 @@ class HouseholdCreate(LoginRequiredMixin, CreateView):
         new_household = form.save()
         Member.objects.get(user__id=self.request.user.id).household.add(new_household.id)
         return super().form_valid(form)
-
-class HouseholdUpdate(LoginRequiredMixin, UpdateView):
-    model = Household
-    fields = ["name"]

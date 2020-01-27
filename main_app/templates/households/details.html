@@ -6,6 +6,7 @@
 
 <div class="row">
   <div class="col s12 m6">
+    <a class="waves-effect waves-light btn orange accent-2" href="" style="width: 100%">Add Expense</a>
     {% if household.expense_set.all|length > 0 %}
       {% for expense in household.expense_set.all %}
       <div class="card">
@@ -27,6 +28,7 @@
   </div>
   <div class="col s12 m6">
     <a class="waves-effect waves-light btn" href="{% url 'households_update' household.id %}">Edit Household</a>
+
   </div>
 </div>
 
