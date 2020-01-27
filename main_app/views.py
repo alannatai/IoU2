@@ -16,7 +16,10 @@ def about(request):
 
 @login_required
 def households_index(request):
-    households = Household.objects.filter(member=request.user.id)
+    member = Member.objects.get(user=request.user.id)
+    households = Household.objects.filter(member=member.id)
+    print('request.user.id', request.user.id)
+    print('households', households)
     return render(request, 'households/index.html', {
         'user': request.user,
         'households': households
