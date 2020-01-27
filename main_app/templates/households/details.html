@@ -2,7 +2,11 @@
 {% block content %}
 
 <h1>{{ household.name }}</h1>
-
+<form action="{% url 'add_expense' household.id %}" method="post">
+    {% csrf_token %}
+    {{ expense_form.as_p }}
+    <input type="submit" class="btn" value="Add Expense">
+</form>
 
 <div class="row">
   <div class="col s12 m6">

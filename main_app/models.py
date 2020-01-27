@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from datetime import datetime
 
 class Household(models.Model):
     name = models.CharField(max_length=50)
@@ -31,7 +32,7 @@ class Expense(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     cost = models.FloatField(blank=True, default=None)
-    date = models.DateField()
+    date = models.DateTimeField(default=datetime.now, blank=True)
     description = models.CharField(max_length=100)
     household = models.ForeignKey(Household, on_delete=models.CASCADE)
 
