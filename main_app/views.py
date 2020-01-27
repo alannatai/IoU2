@@ -33,3 +33,9 @@ def signup(request):
     form = UserCreationForm()
     context = {'form': form, 'error_message': error_message}
     return render(request, 'registration/signup.html', context)
+
+def delete_household(request):
+    households = Household.objects.filter()
+    return render(request, households/index.html",{
+        
+    })
