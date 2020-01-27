@@ -52,8 +52,20 @@ def households_update(request, household_id):
         'household': household, 'household_form': household_form
     })
 
-def expenses_details(request, household_id, expense_id):
-    pass
+@login_required
+def create_expense(request, household_id, user):
+    household = Household.objects.get(pk=household_id)
+    user = request.user
+
+def expenses_detail(request, household_id, expense_id):
+    expense = Expense.objects.get(id=expense_id)
+    return render(request, 'expense/details.html', {
+        'user': request.user,
+        'expense': expense / expense.household.member_set.count
+    })
+
+def new_expense(request):
+    return render(request, 'expense/new.html')
 
 def signup(request):
     error_message = ''
@@ -72,7 +84,7 @@ def signup(request):
 # def delete_household(request):
 #     households = Household.objects.filter()
 #     return render(request, households/index.html",{
-
+        
 #     })
 
 class HouseholdCreate(LoginRequiredMixin, CreateView):
@@ -87,11 +99,11 @@ class HouseholdCreate(LoginRequiredMixin, CreateView):
 
 @login_required
 def add_expense(request, household_id):
-  form = ExpenseForm(request.POST)
-  if form.is_valid():
-    member = Member.objects.get(user__id=request.user.id)
-    new_expense = form.save(commit=False)
-    new_expense.member_id = member.id
-    new_expense.household_id = household_id
-    new_expense.save()
-  return redirect('households_details', household_id=household_id)
+    form = ExpenseForm(request.POST)
+    if form.is_valid():
+        member = Member.objects.get(user__id=request.user.id)
+        new_expense = form.save(commit=False)
+        new_expense.member_id = member.id
+        new_expense.household_id = household_id
+        new_expense.save()
+    return redirect('households_details', household_id=household_id)

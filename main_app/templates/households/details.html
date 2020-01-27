@@ -22,12 +22,14 @@
           <p>{{ expense.date }}</p>
         </div>
         <div class="card-action">
-          <a href="{% url 'expenses_details' household.id expense.id %}">Details</a>
+          <a href="{% url 'expenses_detail' household.id expense.id %}"
+            >Details</a
+          >
         </div>
       </div>
       {% endfor %}
     {% else %}
-      <h2>No expenses</h2>
+    <h2>No expenses</h2>
     {% endif %}
   </div>
   <div class="col s12 m6">
