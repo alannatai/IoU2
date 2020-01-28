@@ -9,7 +9,12 @@
 </form>
 
 {% for key, val in ledger %}
-    <p>{{ key }}: ${{ val }}</p>
+    <p>{{ key }}: ${{ val }}
+        {% if val < 0 %}
+          <a href="{% url 'has_paid' household.id key.id %}">PAID</a>
+        {% endif %}
+    </p>
+    
 {% endfor %}
 
 <div class="row">
