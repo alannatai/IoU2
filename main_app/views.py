@@ -109,7 +109,7 @@ def expenses_detail(request, household_id, expense_id):
     member = Member.objects.all(id=member_id)
     return render(request, 'expense/details.html', {
         # 'user': request.user,
-        'expense': request.expense.get(id=expense_id)
+        'expense': request.expense.get(id=expense_id),
         'household': request.household.member.all(),
         'member': request.split.all(),
     })
