@@ -8,8 +8,8 @@
     <input type="submit" class="btn" value="Add Expense">
 </form>
 
-{% for k, v in oweDict %}
-    <p>{{ k }}: ${{ v }}</p>
+{% for key, val in ledger %}
+    <p>{{ key }}: ${{ val }}</p>
 {% endfor %}
 
 <div class="row">
