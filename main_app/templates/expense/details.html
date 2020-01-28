@@ -4,11 +4,13 @@
     <div class="col s12 m6">
     <div class="card">
     <div class="card-content">
-    <p>Who paid: {{ member.name }}
+    <p>Who paid: {{ expense.member.username }}
     <p>Cost: ${{ expense.cost }}</p>
 
+<hr>
 
-<h1>Details for: {{ expense.member.username }}</h1>
+
+<p>Details for: {{ expense }} </p>
 
 
 {% for split in splits %}
