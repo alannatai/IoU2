@@ -70,6 +70,7 @@ def has_paid(request, household_id, paid_member_id):
             for split_row in Split.objects.filter(expense=expense_row.id):
                 if split_row.member.id == paid_member_id:
                     split_row.has_paid = True
+                    split_row.save()
     return redirect('households_details', household_id=household_id)
 
 @login_required
