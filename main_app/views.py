@@ -24,6 +24,7 @@ def households_index(request):
         'households': households
     })
 
+@login_required
 def get_owed(household_id, current_user_id):
     ### calculates total of expenses owed without subtracting what they owe the user###
     # members_owed = []
@@ -54,7 +55,17 @@ def get_owed(household_id, current_user_id):
                             ledger[expense_row.member.user] = 0 
                         ledger[expense_row.member.user] += split_row.amount_owed
     return ledger
-          
+
+@login_required
+def has_paid(request, household_id, paid_member_id):
+    print('household_id', household_id)
+    print('paid_member_id', paid_member_id)
+    for expense_row in Expense.objects.filter(household=household_id):
+        if expense_row.member.id == request.user.id:
+            for split_row in Split.objects.filter(expense=expense_row.id):
+                if split_row.member.id == paid_member_id:
+                    split_row.has_paid = True
+    return redirect('households_details', household_id=household_id)
 
 @login_required
 def households_details(request, household_id):
@@ -143,7 +154,3 @@ def add_expense(request, household_id):
             print(new_split)
             new_split.save()
     return redirect('households_details', household_id=household_id)
-
-def has_paid(request, household_id, member_id):
-  print('household_id', household_id)
-  print('member_id', member_id)
