@@ -5,7 +5,7 @@ from django.forms import ModelForm
 class HouseholdForm(ModelForm):
     class Meta:
         model = Household
-        fields = ["name", "member"]
+        fields = ["name", "members"]
 
 from django.forms import ModelForm
 from .models import Expense
