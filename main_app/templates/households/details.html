@@ -11,7 +11,7 @@
 {% for member, amount in ledger %}
     <p>{{ member.username }}: ${{ amount }}
         {% if amount < 0 %}
-          <a href="{% url 'has_paid' household.id member.id %}">PAID</a>
+          <a href="{% url 'has_paid' household.id member.id %}" onclick="return confirm('Are you sure?')">PAID</a>
         {% endif %}
     </p>
 
