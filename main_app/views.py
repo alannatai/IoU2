@@ -5,8 +5,11 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum
-from .forms import HouseholdForm, ExpenseForm
+from django.contrib.auth.models import Group
 
+from guardian.shortcuts import assign_perm
+
+from .forms import HouseholdForm, ExpenseForm
 from .models import Household, Member, Expense, Split
 
 # custom form for signup
@@ -32,7 +35,7 @@ def households_index(request):
 def get_owed(household_id, current_user_id):
     # how much you owe people will be positive, if negative, that means people owe you
     ledger = { }
-    
+
     for expense_row in Expense.objects.filter(household=household_id):
         if expense_row.member.id == current_user_id:
             for split_row in Split.objects.filter(expense=expense_row.id):
@@ -65,11 +68,15 @@ def households_details(request, household_id):
     household = Household.objects.get(pk=household_id)
     expense_form = ExpenseForm()
     ledger = get_owed(household_id, request.user.id)
+    print(request.user.has_perm("view_household", household))
+    print(request.user.has_perm("change_household", household))
+    print(request.user.has_perm("delete_household", household))
+    print(request.user.has_perm("add_household", household))
     return render(request, 'households/details.html', {
         'user': request.user,
         'household': household,
         'expense_form': expense_form,
-        'ledger': ledger.items()
+        'ledger': ledger.items(),
     })
 
 @login_required
@@ -116,7 +123,7 @@ def signup(request):
         form = MemberCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)
+            login(request, user, backend="django.contrib.auth.backendsModelBackend")
             return redirect('households_index')
         else:
             error_message = 'Invalid sign up. Please try again.'
@@ -138,6 +145,10 @@ class HouseholdCreate(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         new_household = form.save()
         Member.objects.get(id=self.request.user.id).households.add(new_household.id)
+        assign_perm("view_household", self.request.user, new_household)
+        assign_perm("change_household", self.request.user, new_household)
+        assign_perm("add_household", self.request.user, new_household)
+        assign_perm("delete_household", self.request.user, new_household)
         return super().form_valid(form)
 
 @login_required

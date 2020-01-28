@@ -18,16 +18,6 @@ class Member(AbstractUser):
     def __str__(self):
         return f"Member: {self.username}"
 
-# 'signals' so our Member model will auto create/update when User is created/updated
-# @receiver(post_save, sender=User)
-# def create_user_member(sender, instance, created, **kwargs):
-#     if created:
-#         Member.objects.create(user=instance)
-#
-# @receiver(post_save, sender=User)
-# def save_user_member(sender, instance, **kwargs):
-#     instance.member.save()
-
 class Expense(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
