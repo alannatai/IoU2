@@ -30,7 +30,7 @@ href="#modal1">ADD EXPENSE</a>
 </div>
 
 {% for member, amount in ledger %}
-    <p>{{ member.username }}: ${{ amount }}
+    <p>{{ member.username }}: ${{ amount|floatformat:2 }}
         {% if amount < 0 %}
           <a href="{% url 'has_paid' household.id member.id %}" onclick="return confirm('Are you sure?')">PAID</a>
         {% endif %}
@@ -44,7 +44,7 @@ href="#modal1">ADD EXPENSE</a>
       {% for expense in household.expense_set.all %}
       <div class="card">
         <div class="card-content">
-          <span class="card-title left">{{ expense.name }}</span><span class="card-title right">${{ expense.cost }}</span>
+          <span class="card-title left">{{ expense.name }}</span><span class="card-title right">${{ expense.cost|floatformat:2 }}</span>
           <br/>
         </div>
         <div class="card-action">

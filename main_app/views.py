@@ -4,7 +4,6 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Sum
 from .forms import HouseholdForm, ExpenseForm
 
 from .models import Household, Member, Expense, Split
@@ -13,7 +12,7 @@ from .models import Household, Member, Expense, Split
 class MemberCreationForm(UserCreationForm):
     class Meta(UserCreationForm):
         model = Member
-        fields = ("username", )
+        fields = ('username', 'email')
 
 def home(request):
     return render(request, 'index.html')
@@ -28,6 +27,11 @@ def households_index(request):
         'user': request.user,
         'households': households
     })
+
+def users_detail(request, member_id):
+  return render(request, 'users/details.html', {
+    'user': request.user
+  })
 
 def get_owed(household_id, current_user_id):
     # how much you owe people will be positive, if negative, that means people owe you
@@ -106,9 +110,6 @@ def remove_expense(request, household_id, expense_id):
         'user': request.user,
         'expense': expense
     })
-
-def new_expense(request):
-    return render(request, 'expense/new.html')
 
 def signup(request):
     error_message = ''
