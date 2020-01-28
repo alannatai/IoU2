@@ -11,16 +11,12 @@
 <h1>Details for: {{ expense.name }}</h1>
 
 
-{% for member in split %}
+{% for split in splits %}
     <div class="card">
         <div class="card-content">
             <span class="card-title"></span>
             <form action="/">
-                <input type="checkbox" name="membername" value="membersplit"> {% membersplit %}<br>
-                <script type="text/javascript">
-                    var selectEl = document.getElementById('id_members');
-                    print (id_members);
-                </script>
+                <input type="checkbox" name="membername" value="splits"> {{member}}<br>
             </form>
         </div>
     </div>
@@ -41,3 +37,5 @@ def expenses_detail(request, household_id, expense_id):
     })
 
 {% endcomment %}
+
+{% endblock %}
