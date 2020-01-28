@@ -8,6 +8,10 @@
     <input type="submit" class="btn" value="Add Expense">
 </form>
 
+{% for k, v in oweDict %}
+    <p>{{ k }}: ${{ v }}</p>
+{% endfor %}
+
 <div class="row">
   <div class="col s12 m6">
     <a class="waves-effect waves-light btn orange accent-2" href="" style="width: 100%">Add Expense</a>
