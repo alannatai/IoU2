@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Sum
 from .forms import HouseholdForm, ExpenseForm
 
 from .models import Household, Member, Expense, Split
@@ -23,14 +24,52 @@ def households_index(request):
         'households': households
     })
 
+def get_owed(household_id, current_user_id):
+    # members_owed = []
+    # members = Household.objects.get(id=household_id).member.all()
+    # for member in members:
+    #     member_owed_obj = { 'member_owed': member.user, 'amount_owed': 0 }
+    #     expenses_owed = Expense.objects.filter(household=household_id, member=member.id)
+    #     for expense in expenses_owed:
+    #         for value in Split.objects.filter(expense=expense.id, member=current_user_id).values('amount_owed'):
+    #             member_owed_obj['amount_owed'] += value['amount_owed'] 
+    #     members_owed.append(member_owed_obj)
+
+    # how much you owe people will be positive, if negative, that means people owe you
+    oweDict = { }
+    # iterate through all expenses in household
+    for expenseRow in Expense.objects.filter(household=household_id):
+        # if user paid for expense
+        if expenseRow.member.id == current_user_id:
+            for splitRow in Split.objects.filter(expense=expenseRow.id):
+                if not splitRow.member.user in oweDict:
+                    oweDict[splitRow.member.user] = 0 
+                oweDict[splitRow.member.user] -= splitRow.amount_owed
+        # if someone else paid for expense
+        else:
+            for splitRow in Split.objects.filter(expense=expenseRow.id):
+                # this split is you, you owe this money
+                if splitRow.member.id == current_user_id:
+                    if not expenseRow.member.user in oweDict:
+                        oweDict[expenseRow.member.user] = 0 
+                        oweDict[expenseRow.member.user] += splitRow.amount_owed
+                    else:
+                        oweDict[expenseRow.member.user] += splitRow.amount_owed
+    return oweDict
+          
+
 @login_required
 def households_details(request, household_id):
     household = Household.objects.get(pk=household_id)
     expense_form = ExpenseForm()
+    member = Member.objects.get(user__id=request.user.id)
+    oweDict = get_owed(household_id, member.id)
+    print(oweDict.items())
     return render(request, 'households/details.html', {
         'user': request.user,
         'household': household,
-        'expense_form': expense_form
+        'expense_form': expense_form,
+        'oweDict': oweDict.items()
     })
 
 @login_required
