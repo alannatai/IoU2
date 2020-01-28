@@ -9,6 +9,12 @@ from .forms import HouseholdForm, ExpenseForm
 
 from .models import Household, Member, Expense, Split
 
+# custom form for signup
+class MemberCreationForm(UserCreationForm):
+    class Meta(UserCreationForm):
+        model = Member
+        fields = ("username", )
+
 def home(request):
     return render(request, 'index.html')
 
@@ -17,8 +23,7 @@ def about(request):
 
 @login_required
 def households_index(request):
-    member = Member.objects.get(user=request.user.id)
-    households = Household.objects.filter(member=member.id)
+    households = Member.objects.get(id=request.user.id).households.all()
     return render(request, 'households/index.html', {
         'user': request.user,
         'households': households
@@ -34,7 +39,7 @@ def get_owed(household_id, current_user_id):
     #     expenses_owed = Expense.objects.filter(household=household_id, member=member.id)
     #     for expense in expenses_owed:
     #         for value in Split.objects.filter(expense=expense.id, member=current_user_id).values('amount_owed'):
-    #             member_owed_obj['amount_owed'] += value['amount_owed'] 
+    #             member_owed_obj['amount_owed'] += value['amount_owed']
     #     members_owed.append(member_owed_obj)
 
     # how much you owe people will be positive, if negative, that means people owe you
@@ -43,17 +48,17 @@ def get_owed(household_id, current_user_id):
     for expense_row in Expense.objects.filter(household=household_id):
         if expense_row.member.id == current_user_id:
             for split_row in Split.objects.filter(expense=expense_row.id):
-                if split_row.has_paid == False: 
-                    if not split_row.member.user in ledger:
-                        ledger[split_row.member.user] = 0 
-                    ledger[split_row.member.user] -= split_row.amount_owed
+                if split_row.has_paid == False:
+                    if not split_row.member in ledger:
+                        ledger[split_row.member] = 0
+                    ledger[split_row.member] -= split_row.amount_owed
         else:
             for split_row in Split.objects.filter(expense=expense_row.id):
                 if split_row.has_paid == False:
                     if split_row.member.id == current_user_id:
-                        if not expense_row.member.user in ledger:
-                            ledger[expense_row.member.user] = 0 
-                        ledger[expense_row.member.user] += split_row.amount_owed
+                        if not expense_row.member in ledger:
+                            ledger[expense_row.member] = 0
+                        ledger[expense_row.member] += split_row.amount_owed
     return ledger
 
 @login_required
@@ -71,8 +76,8 @@ def has_paid(request, household_id, paid_member_id):
 def households_details(request, household_id):
     household = Household.objects.get(pk=household_id)
     expense_form = ExpenseForm()
-    member = Member.objects.get(user__id=request.user.id)
-    ledger = get_owed(household_id, member.id)
+    # member = Member.objects.get(id=request.user.id)
+    ledger = get_owed(household_id, request.user.id)
     print(ledger.items())
     return render(request, 'households/details.html', {
         'user': request.user,
@@ -92,7 +97,7 @@ def households_update(request, household_id):
     household = Household.objects.get(id=household_id)
     household_form = HouseholdForm(initial={
         "name": household.name,
-        "member": household.member.all()
+        "members": household.members.all()
     })
     return render(request, 'households/update.html', {
         'household': household, 'household_form': household_form
@@ -102,7 +107,7 @@ def expenses_detail(request, household_id, expense_id):
     expense = Expense.objects.get(id=expense_id)
     return render(request, 'expense/details.html', {
         'user': request.user,
-        'expense': expense 
+        'expense': expense
     })
 
 def new_expense(request):
@@ -111,14 +116,14 @@ def new_expense(request):
 def signup(request):
     error_message = ''
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = MemberCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
             return redirect('households_index')
         else:
             error_message = 'Invalid sign up. Please try again.'
-    form = UserCreationForm()
+    form = MemberCreationForm()
     context = {'form': form, 'error_message': error_message}
     return render(request, 'registration/signup.html', context)
 
@@ -135,19 +140,19 @@ class HouseholdCreate(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         new_household = form.save()
-        Member.objects.get(user__id=self.request.user.id).household.add(new_household.id)
+        Member.objects.get(id=self.request.user.id).household.add(new_household.id)
         return super().form_valid(form)
 
 @login_required
 def add_expense(request, household_id):
     form = ExpenseForm(request.POST)
     if form.is_valid():
-        member = Member.objects.get(user__id=request.user.id)
+        member = Member.objects.get(id=request.user.id)
         new_expense = form.save(commit=False)
-        new_expense.member_id = member.id
+        new_expense.member_id = request.user.id
         new_expense.household_id = household_id
         new_expense.save()
-        household_members = new_expense.household.member.exclude(user=request.user)
+        household_members = new_expense.household.members.exclude(id=request.user.id)
         AMOUNTOWED = new_expense.cost / (household_members.count() + 1)
         for member in household_members:
             new_split = Split(amount_owed=AMOUNTOWED, member=member, expense=new_expense)
