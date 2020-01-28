@@ -64,6 +64,13 @@ def expenses_detail(request, household_id, expense_id):
         'expense': expense 
     })
 
+def remove_expense(request, household_id, expense_id):
+    expense = Expense.objects.remove(id=expense_id)
+    return render(request, "expense/", {
+        'user': request.user,
+        'expense': expense 
+    })
+
 def new_expense(request):
     return render(request, 'expense/new.html')
 

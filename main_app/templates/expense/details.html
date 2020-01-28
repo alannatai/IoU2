@@ -8,19 +8,8 @@
     <div class="card-content">
     <p>Cost: ${{ expense.cost }}</p>
     <p>Who paid: {{ expense.member.user}}</p>
-
-
-
-    {% comment %} {% for member in expense.household.member_set.all %} {% endcomment %}
-    <!-- <p>{{ expense.member.user.username }} paid</p> -->
-    <div>
-    {% comment %} <p>Cost per person: {{  }}</p> {% endcomment %}
-    {% comment %} <p>{{ user.username }}</p><button type=button, method="POST", name="Paid"> {% endcomment %}
-    {% comment %} <input type="checkbox" name="membername" value=""> {% member %}<br> {% endcomment %}
+    <p>{{ expense.split }}</p>
     </div>
-    {% comment %} {% endfor %} {% endcomment %}
-    </div>
-    {% comment %} <div class="card-action"></div> {% endcomment %}
     </div>
     </div>
 </div>
