@@ -37,28 +37,21 @@ def get_owed(household_id, current_user_id):
     #     members_owed.append(member_owed_obj)
 
     # how much you owe people will be positive, if negative, that means people owe you
-    oweDict = { }
-    # iterate through all expenses in household
-    for expenseRow in Expense.objects.filter(household=household_id):
-        # if user paid for expense
-        if expenseRow.member.id == current_user_id:
-          # check the splits under that expense
-            for splitRow in Split.objects.filter(expense=expenseRow.id):
-              # add members to oweDict if they dont exist and subtract what they owe you
-                if not splitRow.member.user in oweDict:
-                    oweDict[splitRow.member.user] = 0 
-                oweDict[splitRow.member.user] -= splitRow.amount_owed
-        # if someone else paid for expense
+    ledger = { }
+
+    for expense_row in Expense.objects.filter(household=household_id):
+        if expense_row.member.id == current_user_id:
+            for split_row in Split.objects.filter(expense=expense_row.id):
+                if not split_row.member.user in ledger:
+                    ledger[split_row.member.user] = 0 
+                ledger[split_row.member.user] -= split_row.amount_owed
         else:
-            for splitRow in Split.objects.filter(expense=expenseRow.id):
-                # this split is you, add what the member owes you
-                if splitRow.member.id == current_user_id:
-                    if not expenseRow.member.user in oweDict:
-                      # add member to oweDict if they dont exist
-                        oweDict[expenseRow.member.user] = 0 
-                        # add what they owe you
-                    oweDict[expenseRow.member.user] += splitRow.amount_owed
-    return oweDict
+            for split_row in Split.objects.filter(expense=expense_row.id):
+                if split_row.member.id == current_user_id:
+                    if not expense_row.member.user in ledger:
+                        ledger[expense_row.member.user] = 0 
+                    ledger[expense_row.member.user] += split_row.amount_owed
+    return ledger
           
 
 @login_required
@@ -66,13 +59,13 @@ def households_details(request, household_id):
     household = Household.objects.get(pk=household_id)
     expense_form = ExpenseForm()
     member = Member.objects.get(user__id=request.user.id)
-    oweDict = get_owed(household_id, member.id)
-    print(oweDict.items())
+    ledger = get_owed(household_id, member.id)
+    print(ledger.items())
     return render(request, 'households/details.html', {
         'user': request.user,
         'household': household,
         'expense_form': expense_form,
-        'oweDict': oweDict.items()
+        'ledger': ledger.items()
     })
 
 @login_required
@@ -80,7 +73,6 @@ def households_update(request, household_id):
     if request.method == "POST":
         household = Household.objects.get(pk=household_id)
         form = HouseholdForm(request.POST, instance=household)
-        # validate the form
         if form.is_valid():
             form.save()
         return redirect('households_details', household_id=household_id)
@@ -90,7 +82,6 @@ def households_update(request, household_id):
         "member": household.member.all()
     })
     return render(request, 'households/update.html', {
-        # pass the cat and feeding_form as context
         'household': household, 'household_form': household_form
     })
 
