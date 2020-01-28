@@ -5,21 +5,16 @@
 nav ul a {
   -webkit-transition: background-color 0.3s;
   transition: background-color 0.3s;
-  font-size: 25px;
-  color: black;
+  font-size: 15px;
+  color: white;
   display: block;
   padding: 0 15px;
   cursor: pointer;
 }
 
 .page-footer {
-  padding-top: 20px;
-  color: #fff;
-  background-color: black;
-  opacity: 0.1;
+  padding: 5px 0px;
+  color:rgb(0,0,0);
+  background-color:rgba(0,0,0,0.5);
 }
 
-/* img {
-  height: 15px;
-  width: 15px;
-} */
