@@ -10,5 +10,6 @@ urlpatterns = [
   path('households/<int:household_id>/<int:expense_id>/', views.expenses_detail, name='expenses_detail'),
   path('households/<int:household_id>/update/', views.households_update, name='households_update'),
   path('households/<int:household_id>/add_expense/', views.add_expense, name='add_expense'),
+  path('households/<int:household_id>/<int:member_id>/has_paid/', views.has_paid, name='has_paid'),
   path('accounts/signup/', views.signup, name='signup')
 ]
