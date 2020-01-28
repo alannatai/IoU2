@@ -7,8 +7,27 @@
     <div class="card">
     <div class="card-content">
     <p>Cost: ${{ expense.cost }}</p>
-    <p>Who paid: {{ expense.member.user}}</p>
-    <p>{{ expense.split }}</p>
+    <ul>
+        {% comment %} <li>{{ id_member }}</li> {% endcomment %}
+    <script>
+        {% for for (var i = 0; i < member.length; i++) %
+            <li>{% id_member[i] %}</li><br>
+    </script>
+    </ul>
+
+
+
+
+
+
+
+
+{% comment %} <script type="text/javascript">
+            var selectEl = document.getElementById('id_member');
+            M.FormSelect.init(selectEl);
+        </script> {% endcomment %}
+    {% comment %} <p>{{ expense.split }}</p> {% endcomment %}
+    {% comment %} <button type="button">Remove Expense</button> {% endcomment %}
     </div>
     </div>
     </div>
