@@ -42,15 +42,17 @@ def get_owed(household_id, current_user_id):
     for expense_row in Expense.objects.filter(household=household_id):
         if expense_row.member.id == current_user_id:
             for split_row in Split.objects.filter(expense=expense_row.id):
-                if not split_row.member.user in ledger:
-                    ledger[split_row.member.user] = 0 
-                ledger[split_row.member.user] -= split_row.amount_owed
+                if split_row.has_paid == False: 
+                    if not split_row.member.user in ledger:
+                        ledger[split_row.member.user] = 0 
+                    ledger[split_row.member.user] -= split_row.amount_owed
         else:
             for split_row in Split.objects.filter(expense=expense_row.id):
-                if split_row.member.id == current_user_id:
-                    if not expense_row.member.user in ledger:
-                        ledger[expense_row.member.user] = 0 
-                    ledger[expense_row.member.user] += split_row.amount_owed
+                if split_row.has_paid == False:
+                    if split_row.member.id == current_user_id:
+                        if not expense_row.member.user in ledger:
+                            ledger[expense_row.member.user] = 0 
+                        ledger[expense_row.member.user] += split_row.amount_owed
     return ledger
           
 
@@ -84,11 +86,6 @@ def households_update(request, household_id):
     return render(request, 'households/update.html', {
         'household': household, 'household_form': household_form
     })
-
-@login_required
-def create_expense(request, household_id, user):
-    household = Household.objects.get(pk=household_id)
-    user = request.user
 
 def expenses_detail(request, household_id, expense_id):
     expense = Expense.objects.get(id=expense_id)
@@ -146,3 +143,7 @@ def add_expense(request, household_id):
             print(new_split)
             new_split.save()
     return redirect('households_details', household_id=household_id)
+
+def has_paid(request, household_id, member_id):
+  print('household_id', household_id)
+  print('member_id', member_id)
