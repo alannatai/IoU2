@@ -1,26 +1,66 @@
 {% extends 'base.html' %} {% block content %}
 
-<h1>Details for: {{ expense.name }}</h1>
-
 <div class="row">
     <div class="col s12 m6">
     <div class="card">
     <div class="card-content">
+    <p>Who paid: {{ member.name }}
     <p>Cost: ${{ expense.cost }}</p>
-    <p>Who paid: {{ expense.member.user}}</p>
+
+
+<h1>Details for: {{ expense.name }}</h1>
 
 
 
-    {% comment %} {% for member in expense.household.member_set.all %} {% endcomment %}
-    <!-- <p>{{ expense.member.user.username }} paid</p> -->
-    <div>
-    {% comment %} <p>Cost per person: {{  }}</p> {% endcomment %}
-    {% comment %} <p>{{ user.username }}</p><button type=button, method="POST", name="Paid"> {% endcomment %}
-    {% comment %} <input type="checkbox" name="membername" value=""> {% member %}<br> {% endcomment %}
+
+{% for member in split %}
+    <div class="card">
+        <div class="card-content">
+            <span class="card-title"></span>
+            <p>{{ split.member }}</p>
+        </div>
     </div>
-    {% comment %} {% endfor %} {% endcomment %}
+{% endfor %}
+    
+
+{% comment %} class Split(models.Model):
+    amount_owed = models.FloatField()
+    member = models.ForeignKey(Member, on_delete=models.CASCADE)
+    expense = models.ForeignKey(Expense, on_delete=models.CASCADE)
+    has_paid = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.member.user.username} needs to pay ${self.amount_owed} for {self.expense.name}." {% endcomment %}
+
+
+
+
+
+
+
+
+    {% comment %} <ul>
+        {% comment %} <li>{{ id_member }}</li> {% endcomment %}
+    {% comment %} <script>
+        for (var i = 0; i < member.length; i++)
+            <li>id_member[i]</li><br>
+    </script>
+    </ul> {% endcomment %} {% endcomment %}
+
+
+
+
+
+
+
+
+{% comment %} <script type="text/javascript">
+            var selectEl = document.getElementById('id_member');
+            M.FormSelect.init(selectEl);
+        </script> {% endcomment %}
+    {% comment %} <p>{{ expense.split }}</p> {% endcomment %}
+    {% comment %} <button type="button">Remove Expense</button> {% endcomment %}
     </div>
-    {% comment %} <div class="card-action"></div> {% endcomment %}
     </div>
     </div>
 </div>

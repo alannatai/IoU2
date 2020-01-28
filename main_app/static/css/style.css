@@ -1,0 +1,25 @@
+.grey {
+  opacity: 0.3;
+}
+
+nav ul a {
+  -webkit-transition: background-color 0.3s;
+  transition: background-color 0.3s;
+  font-size: 25px;
+  color: black;
+  display: block;
+  padding: 0 15px;
+  cursor: pointer;
+}
+
+.page-footer {
+  padding-top: 20px;
+  color: #fff;
+  background-color: black;
+  opacity: 0.1;
+}
+
+/* img {
+  height: 15px;
+  width: 15px;
+} */
