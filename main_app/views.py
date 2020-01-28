@@ -107,15 +107,16 @@ def expenses_detail(request, household_id, expense_id):
     expense = Expense.objects.get(id=expense_id)
     household = Household.objects.get(id=household_id)
     member = Member.objects.all(id=member_id)
+    split = Split.objects.get(id=split_id)
     return render(request, 'expense/details.html', {
         # 'user': request.user,
-        'expense': request.expense.get(id=expense_id)
+        'expense': request.expense.get(id=expense_id),
         'household': request.household.member.all(),
-        'member': request.split.all(),
+        'membersplit': request.split.all(id=split_id)
     })
 
 def remove_expense(request, household_id, expense_id):
-    expense = Expense.objects.remove(id=expense_id)
+    expense = Expense.objects.remove(id=expense_id),
     return render(request, "expense/", {
         'user': request.user,
         'expense': expense
