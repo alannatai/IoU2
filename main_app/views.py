@@ -4,19 +4,16 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Sum
-from django.contrib.auth.models import Group
-
-from guardian.shortcuts import assign_perm
-
 from .forms import HouseholdForm, ExpenseForm
+
+
 from .models import Household, Member, Expense, Split
 
 # custom form for signup
 class MemberCreationForm(UserCreationForm):
     class Meta(UserCreationForm):
         model = Member
-        fields = ("username", )
+        fields = ('username', 'email')
 
 def home(request):
     return render(request, 'index.html')
@@ -31,6 +28,11 @@ def households_index(request):
         'user': request.user,
         'households': households
     })
+
+def users_detail(request, member_id):
+  return render(request, 'users/details.html', {
+    'user': request.user
+  })
 
 def get_owed(household_id, current_user_id):
     # how much you owe people will be positive, if negative, that means people owe you
@@ -98,24 +100,24 @@ def households_update(request, household_id):
 
 def expenses_detail(request, household_id, expense_id):
     expense = Expense.objects.get(id=expense_id)
+    member = expense.member
+
     household = Household.objects.get(id=household_id)
-    member = Member.objects.all(id=member_id)
+    split = Split.objects.filter(expense=expense_id)
+
     return render(request, 'expense/details.html', {
         # 'user': request.user,
-        'expense': request.expense.get(id=expense_id),
-        'household': request.household.member.all(),
-        'member': request.split.all(),
+        'expense': expense,
+        'household': household,
+        'split': split,
     })
 
 def remove_expense(request, household_id, expense_id):
-    expense = Expense.objects.remove(id=expense_id)
+    expense = Expense.objects.remove(id=expense_id),
     return render(request, "expense/", {
         'user': request.user,
         'expense': expense
     })
-
-def new_expense(request):
-    return render(request, 'expense/new.html')
 
 def signup(request):
     error_message = ''

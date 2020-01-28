@@ -20,20 +20,21 @@ class Member(AbstractUser):
 
 class Expense(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE)
+    household = models.ForeignKey(Household, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     cost = models.FloatField(blank=True, default=None)
     date = models.DateTimeField(default=datetime.now, blank=True)
     description = models.CharField(max_length=100)
-    household = models.ForeignKey(Household, on_delete=models.CASCADE)
+    
 
     def __str__(self):
         return f"{self.member.username} bought {self.name} for {self.cost}"
 
 class Split(models.Model):
-    amount_owed = models.FloatField()
     member = models.ForeignKey(Member, on_delete=models.CASCADE)
     expense = models.ForeignKey(Expense, on_delete=models.CASCADE)
     has_paid = models.BooleanField(default=False)
+    amount_owed = models.FloatField()
 
     def __str__(self):
         return f"{self.member.username} needs to pay ${self.amount_owed} for {self.expense.name}."
