@@ -89,9 +89,13 @@ def households_update(request, household_id):
 
 def expenses_detail(request, household_id, expense_id):
     expense = Expense.objects.get(id=expense_id)
+    household = Household.objects.get(id=household_id)
+    member = Member.objects.all(id=member_id)
     return render(request, 'expense/details.html', {
-        'user': request.user,
-        'expense': expense 
+        # 'user': request.user,
+        'expense': request.expense.get(id=expense_id)
+        'household': request.household.member.all(),
+        'member': request.split.all(),
     })
 
 def remove_expense(request, household_id, expense_id):
