@@ -29,19 +29,7 @@ def households_index(request):
         'households': households
     })
 
-@login_required
 def get_owed(household_id, current_user_id):
-    ### calculates total of expenses owed without subtracting what they owe the user###
-    # members_owed = []
-    # members = Household.objects.get(id=household_id).member.all()
-    # for member in members:
-    #     member_owed_obj = { 'member_owed': member.user, 'amount_owed': 0 }
-    #     expenses_owed = Expense.objects.filter(household=household_id, member=member.id)
-    #     for expense in expenses_owed:
-    #         for value in Split.objects.filter(expense=expense.id, member=current_user_id).values('amount_owed'):
-    #             member_owed_obj['amount_owed'] += value['amount_owed']
-    #     members_owed.append(member_owed_obj)
-
     # how much you owe people will be positive, if negative, that means people owe you
     ledger = { }
 
@@ -76,9 +64,7 @@ def has_paid(request, household_id, paid_member_id):
 def households_details(request, household_id):
     household = Household.objects.get(pk=household_id)
     expense_form = ExpenseForm()
-    # member = Member.objects.get(id=request.user.id)
     ledger = get_owed(household_id, request.user.id)
-    print(ledger.items())
     return render(request, 'households/details.html', {
         'user': request.user,
         'household': household,
@@ -109,7 +95,7 @@ def expenses_detail(request, household_id, expense_id):
     member = Member.objects.all(id=member_id)
     return render(request, 'expense/details.html', {
         # 'user': request.user,
-        'expense': request.expense.get(id=expense_id)
+        'expense': request.expense.get(id=expense_id),
         'household': request.household.member.all(),
         'member': request.split.all(),
     })
@@ -151,7 +137,7 @@ class HouseholdCreate(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         new_household = form.save()
-        Member.objects.get(id=self.request.user.id).household.add(new_household.id)
+        Member.objects.get(id=self.request.user.id).households.add(new_household.id)
         return super().form_valid(form)
 
 @login_required
