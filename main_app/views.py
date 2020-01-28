@@ -25,6 +25,7 @@ def households_index(request):
     })
 
 def get_owed(household_id, current_user_id):
+    ### calculates total of expenses owed without subtracting what they owe the user###
     # members_owed = []
     # members = Household.objects.get(id=household_id).member.all()
     # for member in members:
@@ -41,20 +42,22 @@ def get_owed(household_id, current_user_id):
     for expenseRow in Expense.objects.filter(household=household_id):
         # if user paid for expense
         if expenseRow.member.id == current_user_id:
+          # check the splits under that expense
             for splitRow in Split.objects.filter(expense=expenseRow.id):
+              # add members to oweDict if they dont exist and subtract what they owe you
                 if not splitRow.member.user in oweDict:
                     oweDict[splitRow.member.user] = 0 
                 oweDict[splitRow.member.user] -= splitRow.amount_owed
         # if someone else paid for expense
         else:
             for splitRow in Split.objects.filter(expense=expenseRow.id):
-                # this split is you, you owe this money
+                # this split is you, add what the member owes you
                 if splitRow.member.id == current_user_id:
                     if not expenseRow.member.user in oweDict:
+                      # add member to oweDict if they dont exist
                         oweDict[expenseRow.member.user] = 0 
-                        oweDict[expenseRow.member.user] += splitRow.amount_owed
-                    else:
-                        oweDict[expenseRow.member.user] += splitRow.amount_owed
+                        # add what they owe you
+                    oweDict[expenseRow.member.user] += splitRow.amount_owed
     return oweDict
           
 
