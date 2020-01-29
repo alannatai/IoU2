@@ -25,7 +25,6 @@ class Expense(models.Model):
     cost = models.FloatField(blank=True, default=None)
     date = models.DateTimeField(default=datetime.now, blank=True)
     description = models.CharField(max_length=100)
-    
 
     def __str__(self):
         return f"{self.member.username} bought {self.name} for {self.cost}"

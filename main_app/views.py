@@ -8,7 +8,7 @@ from django.http import HttpResponse
 from .forms import HouseholdForm, ExpenseForm
 
 from django.contrib.auth.models import Group
-from guardian.shortcuts import assign_perm
+from guardian.shortcuts import assign_perm, remove_perm
 
 from .models import Household, Member, Expense, Split
 
@@ -116,24 +116,39 @@ def households_details(request, household_id):
     if request.user.has_perm("view_household", household):
         expense_form = ExpenseForm()
         ledger = get_owed(household_id, request.user.id)
+        is_admin = request.user.has_perm("change_household", household)
         return render(request, 'households/details.html', {
             'user': request.user,
+            "is_admin": is_admin,
             'household': household,
             'expense_form': expense_form,
             'ledger': ledger.items(),
         })
     else:
-        return HttpResponse(status=403)
+        return HttpResponse(status=401)
 
 @login_required
 def households_update(request, household_id):
     household = Household.objects.get(pk=household_id)
     if request.user.has_perm("change_household", household):
         if request.method == "POST":
+            previous_household_members = household.members.all()
+            household_group = Group.objects.get(name=f'household_{household_id}')
             form = HouseholdForm(request.POST, instance=household)
             if form.is_valid():
+                new_household_members = form.cleaned_data["members"].all()
+                removed_members = previous_household_members.difference(new_household_members)
+                for removed_member in removed_members:
+                    # user cant remove self from household
+                    if removed_member.id == request.user.id:
+                        return HttpResponse(status=403)
+                    household_group.user_set.remove(removed_member)
+                added_members = new_household_members.difference(previous_household_members)
+                for added_member in added_members:
+                    household_group.user_set.add(added_member)
                 form.save()
             return redirect('households_details', household_id=household_id)
+        # GET request
         household_form = HouseholdForm(initial={
             "name": household.name,
             "members": household.members.all()
@@ -142,7 +157,7 @@ def households_update(request, household_id):
             'household': household, 'household_form': household_form
         })
     else:
-        return HttpResponse(status=403)
+        return HttpResponse(status=401)
 
 # TODO
 # def delete_household(request):
@@ -171,7 +186,7 @@ def add_expense(request, household_id):
                 new_split.save()
         return redirect('households_details', household_id=household_id)
     else:
-        return HttpResponse(status=403)
+        return HttpResponse(status=401)
 
 @login_required
 def expenses_detail(request, household_id, expense_id):
@@ -185,7 +200,7 @@ def expenses_detail(request, household_id, expense_id):
             'split': split,
         })
     else:
-        return HttpResponse(status=403)
+        return HttpResponse(status=401)
 
 @login_required
 def remove_expense(request, household_id, expense_id):
