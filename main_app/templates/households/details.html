@@ -72,7 +72,7 @@
 
   <div class="col s5">
       <ul class="collapsible popout">
-          {% for ledger_member, amount in sorted_ledger %}
+          {% for ledger_member, amount in ledger %}
           <li>
               <div class="collapsible-header">
                   <article class="center-align">{{ ledger_member.username }}
@@ -97,7 +97,7 @@
                                 <li>
                                     {{ split }}
                                     {% if split.member == ledger_member %}
-                                        <a href="{% url 'has_paid_split' household.id split.id %}" onclick="return confirm('Are you sure?')" class="waves-effect waves-light btn-small">Paid</a>
+                                        <a href="{% url 'has_paid_split' household.id split.id %}" onclick="return confirm('Are you sure?')">Paid</a>
                                     {% endif %}
                                 </li>
                             {% endfor %}

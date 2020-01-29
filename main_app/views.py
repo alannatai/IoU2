@@ -98,9 +98,7 @@ def has_paid(request, household_id, member_id):
     return redirect('households_details', household_id=household_id)
 
 def has_paid_split(request, household_id, split_id):
-    print('split_id', split_id)
     split = Split.objects.get(id=split_id)
-    print(split)
     split.has_paid = True
     split.save()
     return redirect('households_details', household_id=household_id)
@@ -133,7 +131,7 @@ def households_details(request, household_id):
     if request.user.has_perm("view_household", household):
         expense_form = ExpenseForm()
         ledger = get_owed(household_id, request.user.id).items()
-        sorted_ledger = sorted(ledger, key=lambda item: item[1])
+        sorted_ledger = sorted(ledger, key=lambda item: item[1], reverse=True)
         ledger_splits = { }
 
         for member, amount in ledger:
@@ -147,7 +145,7 @@ def households_details(request, household_id):
             "is_admin": is_admin,
             'household': household,
             'expense_form': expense_form,
-            'sorted_ledger': sorted_ledger,
+            'ledger': sorted_ledger,
             'ledger_splits': ledger_splits.items()
         })
     else:
