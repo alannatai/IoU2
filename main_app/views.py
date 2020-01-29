@@ -62,16 +62,35 @@ def has_paid(request, household_id, member_id):
                     split_row.save()
     return redirect('households_details', household_id=household_id)
 
+# def expense_splits(request, household_id, member_id):
+#     user_splits = Split.objects.filter(expense__member=request.user.id, member=member_id, has_paid=False)
+#     member_splits = Split.objects.filter(expense__member=member_id, member=request.user.id, has_paid=False)
+#     ledger = get_owed(household_id, request.user.id)
+#     return render(request, 'expense/splits.html', {
+#         'user_splits': user_splits,
+#         'member_splits': member_splits,
+#         'member': Member.objects.get(id=member_id),
+#         'ledger': ledger.items()
+#     })
+
 @login_required
 def households_details(request, household_id):
     household = Household.objects.get(pk=household_id)
     expense_form = ExpenseForm()
-    ledger = get_owed(household_id, request.user.id)
+    ledger = get_owed(household_id, request.user.id).items()
+    ledger_splits = { }
+
+    for member, amount in ledger:
+        member_splits = list(Split.objects.filter(expense__member=member.id, member=request.user.id, has_paid=False))
+        user_splits = list(Split.objects.filter(expense__member=request.user.id, member=member.id, has_paid=False))
+        ledger_splits[member] = member_splits + user_splits
+
     return render(request, 'households/details.html', {
         'user': request.user,
         'household': household,
         'expense_form': expense_form,
-        'ledger': ledger.items()
+        'ledger': ledger,
+        'ledger_splits': ledger_splits.items()
     })
 
 @login_required
@@ -158,14 +177,3 @@ def add_expense(request, household_id):
             print(new_split)
             new_split.save()
     return redirect('households_details', household_id=household_id)
-
-def expense_splits(request, household_id, member_id):
-    user_splits = Split.objects.filter(expense__member=request.user.id, member=member_id, has_paid=False)
-    member_splits = Split.objects.filter(expense__member=member_id, member=request.user.id, has_paid=False)
-    ledger = get_owed(household_id, request.user.id)
-    return render(request, 'expense/splits.html', {
-        'user_splits': user_splits,
-        'member_splits': member_splits,
-        'member': Member.objects.get(id=member_id),
-        'ledger': ledger.items()
-    })
