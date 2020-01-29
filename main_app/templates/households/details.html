@@ -8,10 +8,7 @@ href="#modal1">ADD EXPENSE</a>
 <a class="waves-effect waves-light btn" href="{% url 'households_update' household.id %}">Edit Household</a>
 
 <h2>{{ household.name }} - Total Expenses</h2>
-<!-- Modal Trigger -->
 
-
-<!-- Modal Structure -->
 <div id="modal1" class="modal">
   <div class="modal-content">
     <div class="modal-footer">
@@ -29,14 +26,32 @@ href="#modal1">ADD EXPENSE</a>
   </div>
 </div>
 
-{% for member, amount in ledger %}
-    <h5>{{ member.username }}: ${{ amount|floatformat:2 }}
-        {% if amount < 0 %}
-          <a href="{% url 'has_paid' household.id member.id %}" onclick="return confirm('Are you sure?')" class="waves-effect waves-light btn">PAID</a>
-        {% endif %}
-        <a href="{% url 'expense_splits' household.id member.id %}" class="waves-effect waves-light btn">MORE</a>
-    </h5>
-{% endfor %}
+<ul class="collapsible popout">
+  
+        {% for ledger_member, amount in ledger %}
+        <li>
+            <div class="collapsible-header">
+            {{ ledger_member.username }}: ${{ amount|floatformat:2 }}
+            {% if amount < 0 %}
+                <a href="{% url 'has_paid' household.id ledger_member.id %}" onclick="return confirm('Are you sure?')" class="waves-effect waves-light btn">PAID</a>
+            {% endif %}
+       </div> 
+       <div class="collapsible-body">
+            {% for member, splits in ledger_splits %}
+                {% if ledger_member == member %}
+                    <ul>
+                      {% for split in splits %}
+                          <li>{{ split }}</li>
+                      {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endfor %}
+          </div> 
+        </li>
+        {% endfor %}
+
+</ul>
+
 
 <div class="row">
   <div class="col s12 m6">
@@ -62,6 +77,7 @@ href="#modal1">ADD EXPENSE</a>
 <script>
 $(document).ready(function () {
     $('.modal').modal();
+    $('.collapsible').collapsible();
 });
 </script>
 
