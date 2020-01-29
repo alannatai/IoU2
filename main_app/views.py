@@ -221,12 +221,17 @@ def expenses_detail(request, household_id, expense_id):
 @login_required
 def remove_expense(request, household_id, expense_id):
     # if request.user.has_perm("delete_expense", expense):
-    # TODO
-    expense = Expense.objects.remove(id=expense_id),
-    return render(request, "expense/", {
-        'user': request.user,
-        'expense': expense
-    })
+    expense = Expense.objects.get(id = expense_id)
+    expense.delete()
+    return redirect('households_details', household_id=household_id)
+
+def edit_expense(request, household_id, expense_id):
+    # if request.user.has_perm("edit_expense", expense):
+    expense = Expense.objects.get(id = expense_id)
+    expense.name = expense(name)
+    expense.cost = expense(cost)
+    expense.update()
+    return redirect('households_details', household_id=household_id)
 
 def expense_splits(request, household_id, member_id):
     user_splits = Split.objects.filter(expense__member=request.user.id, member=member_id, has_paid=False)
@@ -238,3 +243,7 @@ def expense_splits(request, household_id, member_id):
         'member': Member.objects.get(id=member_id),
         'ledger': ledger.items()
     })
+
+class ExpenseUpdate(LoginRequiredMixin, UpdateView):
+    model = Expense
+    fields = ['name', 'cost', 'description']
