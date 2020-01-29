@@ -7,20 +7,24 @@
 
 <h2>{{ household.name }} - Total Expenses</h2>
 
+<!-- Add Expense Modal -->
 <div id="modal1" class="modal">
   <div class="modal-content">
     <div class="modal-header right">
-      <big><a href="#!" class="modal-close waves-effect waves-green btn-flat">&#10005;</a></big>
+      <big><a href="#!" class="modal-close waves-effect waves-red btn-flat">&#10005;</a></big>
     </div>
     <h4>Add an expense to {{ household.name }}</h4>
-      <form action="{% url 'add_expense' household.id %}" method="post">
-        {% csrf_token %}
-        {{ expense_form.as_p }}
-        <input type="submit" class="btn" value="Add Expense">
-      </form>
-    </div>
+    <form action="{% url 'add_expense' household.id %}" method="post">
+      {% csrf_token %}
+      {{ expense_form.as_p }}
+    <input type="submit" class="btn" value="Add Expense">
+    </form>
   </div>
+</div>
 
+
+
+<!-- Split Popouts -->
 <ul class="collapsible popout">
   {% for ledger_member, amount in ledger %}
     <li>
@@ -43,10 +47,9 @@
     </div> 
   </li>
   {% endfor %}
-
 </ul>
 
-
+<!-- List All Expenses in Household -->
 <div class="row">
   <div class="col s12 m6">
     {% if household.expense_set.all|length > 0 %}
@@ -57,22 +60,55 @@
           <br/>
         </div>
         <div class="card-action">
-          <a href="{% url 'expenses_detail' household.id expense.id %}"
-            >Details</a>
+          <a href="{% url 'expenses_detail' household.id expense.id %}">Details</a>
+          <a class="modal-trigger" href="#modal2">DETAILS modal</a>
         </div>
       </div>
       {% endfor %}
     {% else %}
-    <h2>No expenses</h2>
+    <h2>There are no expenses. Enter your first expense by pressing "Add Expense" at the top left of the page.</h2>
     {% endif %}
   </div>
 </div>
 
+<!-- View Expense Details Modal -->
+<div id="modal2" class="modal">
+  <div class="modal-content">
+    <div class="modal-header right">
+      <big><a href="#!" class="modal-close waves-effect waves-red btn-flat">&#10005;</a></big>
+    </div>
+      <h4>Expense</h4>
+      <h4> {{ expense.name }}</h4>
+
+      <div class="row">
+        <div class="col s12 m6">
+        <div class="card">
+        <div class="card-content">
+        <p>Who paid: {{ expense.member.username }}
+        <p>Cost: ${{ expense.cost }}</p>
+      <hr>
+
+<p>Details for: {{ expense }} </p>
+
+{% for split in splits %}
+  <div class="card">
+    <div class="card-content">
+      <span class="card-title"></span>
+        <form action="/">
+          <input type="checkbox" name="membername" value="splits">{{member}}<br>
+        </form>
+      </div>
+    </div>
+  {% endfor %}
+  </div>
+</div>
+
+<!-- JavaScript for modals and collapisble -->
 <script>
-$(document).ready(function () {
+  $(document).ready(function () {
     $('.modal').modal();
     $('.collapsible').collapsible();
-});
+  });
 </script>
 
 {% endblock %}
