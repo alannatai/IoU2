@@ -47,15 +47,20 @@ def households_index(request):
         'households': households
     })
 
+<<<<<<< HEAD
 @login_required
 def users_detail(request, member_id):
   return render(request, 'users/details.html', {
     'user': request.user
   })
+=======
+class UserUpdate(LoginRequiredMixin, UpdateView):
+    model = Member
+    fields = ['username', 'email', 'first_name', 'last_name']
+>>>>>>> e8ecfe30d7b2c37270a13e985a474c35bd6e485b
 
 # helper function
 def get_owed(household_id, current_user_id):
-    # how much you owe people will be positive, if negative, that means people owe you
     ledger = { }
 
     # get all splits in household by iterating through each expense on the household
@@ -211,3 +216,64 @@ def remove_expense(request, household_id, expense_id):
         'user': request.user,
         'expense': expense
     })
+<<<<<<< HEAD
+=======
+
+def signup(request):
+    error_message = ''
+    if request.method == 'POST':
+        form = MemberCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('households_index')
+        else:
+            error_message = 'Invalid sign up. Please try again.'
+    form = MemberCreationForm()
+    context = {'form': form, 'error_message': error_message}
+    return render(request, 'registration/signup.html', context)
+
+# def delete_household(request):
+#     households = Household.objects.filter()
+#     return render(request, households/index.html",{
+
+#     })
+
+class HouseholdCreate(LoginRequiredMixin, CreateView):
+    model = Household
+    fields = ['name']
+    success_url = '/households/'
+
+    def form_valid(self, form):
+        new_household = form.save()
+        Member.objects.get(id=self.request.user.id).households.add(new_household.id)
+        return super().form_valid(form)
+
+@login_required
+def add_expense(request, household_id):
+    form = ExpenseForm(request.POST)
+    if form.is_valid():
+        member = Member.objects.get(id=request.user.id)
+        new_expense = form.save(commit=False)
+        new_expense.member_id = request.user.id
+        new_expense.household_id = household_id
+        new_expense.save()
+        household_members = new_expense.household.members.exclude(id=request.user.id)
+        AMOUNTOWED = new_expense.cost / (household_members.count() + 1)
+        for member in household_members:
+            new_split = Split(amount_owed=AMOUNTOWED, member=member, expense=new_expense)
+            print(new_split)
+            new_split.save()
+    return redirect('households_details', household_id=household_id)
+
+def expense_splits(request, household_id, member_id):
+    user_splits = Split.objects.filter(expense__member=request.user.id, member=member_id, has_paid=False)
+    member_splits = Split.objects.filter(expense__member=member_id, member=request.user.id, has_paid=False)
+    ledger = get_owed(household_id, request.user.id)
+    return render(request, 'expense/splits.html', {
+        'user_splits': user_splits,
+        'member_splits': member_splits,
+        'member': Member.objects.get(id=member_id),
+        'ledger': ledger.items()
+    })
+>>>>>>> e8ecfe30d7b2c37270a13e985a474c35bd6e485b

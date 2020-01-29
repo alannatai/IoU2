@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from datetime import datetime
+from django.urls import reverse
 
 class Household(models.Model):
     name = models.CharField(max_length=50)
@@ -17,6 +18,9 @@ class Member(AbstractUser):
 
     def __str__(self):
         return f"Member: {self.username}"
+    
+    def get_absolute_url(self):
+        return reverse('user_update', kwargs={'pk': self.id})
 
 class Expense(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE)
