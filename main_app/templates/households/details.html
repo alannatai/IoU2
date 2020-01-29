@@ -2,59 +2,32 @@
 {% block content %}
 
 <br>
-<a class="waves-effect waves-light btn modal-trigger"
-href="#modal1">ADD EXPENSE</a>
-
+<br>
 <a class="waves-effect waves-light btn{% if not is_admin %} disabled{% endif %}" href="{% url 'households_update' household.id %}">Edit Household</a>
 
 <h2>{{ household.name }} - Total Expenses</h2>
 
-<div id="modal1" class="modal">
-  <div class="modal-content">
-    <div class="modal-footer">
-      <a href="#!" class="modal-close waves-effect waves-green btn-flat">X</a>
-    </div>
-    <h4>Add an expense to {{ household.name }}</h4>
-      <form action="{% url 'add_expense' household.id %}" method="post">
-        {% csrf_token %}
-        {{ expense_form.as_p }}
-        <input type="submit" class="btn" value="Add Expense">
-      </form>
-    </div>
-  <div class="modal-footer">
-    <a href="#!" class="modal-close waves-effect waves-green btn-flat">CLOSE</a>
-  </div>
-</div>
-
-<ul class="collapsible popout">
-  
-        {% for ledger_member, amount in ledger %}
-        <li>
-            <div class="collapsible-header">
-            {{ ledger_member.username }}: ${{ amount|floatformat:2 }}
-            {% if amount < 0 %}
-                <a href="{% url 'has_paid' household.id ledger_member.id %}" onclick="return confirm('Are you sure?')" class="waves-effect waves-light btn">PAID</a>
-            {% endif %}
-       </div> 
-       <div class="collapsible-body">
-            {% for member, splits in ledger_splits %}
-                {% if ledger_member == member %}
-                    <ul>
-                      {% for split in splits %}
-                          <li>{{ split }}</li>
-                      {% endfor %}
-                    </ul>
-                {% endif %}
-            {% endfor %}
-          </div> 
-        </li>
-        {% endfor %}
-
-</ul>
-
-
 <div class="row">
-  <div class="col s12 m6">
+  <div class="col s7">
+  <a class="waves-effect waves-light btn modal-trigger" href="#modal1">ADD EXPENSE</a>
+  <div id="modal1" class="modal">
+    <div class="modal-content">
+      <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat">X</a>
+      </div>
+      <h4>Add an expense to {{ household.name }}</h4>
+        <form action="{% url 'add_expense' household.id %}" method="post">
+          {% csrf_token %}
+          {{ expense_form.as_p }}
+          <input type="submit" class="btn" value="Add Expense">
+        </form>
+      </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-close waves-effect waves-green btn-flat">CLOSE</a>
+    </div>
+  </div>
+ <br>
+ <br>
     {% if household.expense_set.all|length > 0 %}
       {% for expense in household.expense_set.all %}
       <div class="card">
@@ -71,6 +44,46 @@ href="#modal1">ADD EXPENSE</a>
     {% else %}
     <h2>No expenses</h2>
     {% endif %}
+  </div>
+
+  <div class="col s5">
+      <ul class="collapsible popout">
+          {% for ledger_member, amount in ledger %}
+          <li>
+              <div class="collapsible-header">
+                  <article class="center-align">{{ ledger_member.username }}
+                      <br>
+                  {% if amount < 0 %}
+                      <h3 class="blue-text text-lighten-2">${{ amount|floatformat:2 }}</h3>
+                  {% else %}
+                      <h3 class="pink-text text-darken-1">${{ amount|floatformat:2 }}</h3>
+                  {% endif %}
+                  </article>
+                  {% if amount < 0 %}
+                      <span class="right">
+                          <a href="{% url 'has_paid' household.id ledger_member.id %}" onclick="return confirm('Are you sure?')" class="waves-effect waves-light btn-small">Paid</a>
+                      </span>
+                  {% endif %}
+              </div> 
+              <div class="collapsible-body">
+                  {% for ledger_splits_member, splits in ledger_splits %}
+                      {% if ledger_member == ledger_splits_member %}
+                          <ul>
+                            {% for split in splits %}
+                                <li>
+                                    {{ split }}
+                                    {% if split.member == ledger_member %}
+                                        <a href="{% url 'has_paid_split' household.id split.id %}" onclick="return confirm('Are you sure?')" class="waves-effect waves-light btn-small">Paid</a>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                          </ul>
+                      {% endif %}
+                  {% endfor %}
+              </div> 
+          </li>
+          {% endfor %}
+      </ul>
   </div>
 </div>
 
