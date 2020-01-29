@@ -82,7 +82,9 @@ DATABASES = {
     }
 }
 
+# django-guardian settings
 AUTH_USER_MODEL = 'main_app.Member'
+ANONYMOUS_USER_NAME = None
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators

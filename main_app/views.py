@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from .forms import HouseholdForm, ExpenseForm
@@ -30,7 +30,11 @@ def signup(request):
         form = MemberCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            # need to explicitly state backend since we have 2 authentication backends (ref. settings.py @ AUTHENTICATION_BACKENDS)
+            # assign member permissions
+            assign_perm("view_member", user, user)
+            assign_perm("change_member", user, user)
+            assign_perm("delete_member", user, user)
+            # need to explicitly state backend since we have 2 authentication backends (refer to settings.py -> AUTHENTICATION_BACKENDS variable)
             login(request, user, backend="django.contrib.auth.backendsModelBackend")
             return redirect('households_index')
         else:
@@ -47,17 +51,18 @@ def households_index(request):
         'households': households
     })
 
-<<<<<<< HEAD
-@login_required
-def users_detail(request, member_id):
-  return render(request, 'users/details.html', {
-    'user': request.user
-  })
-=======
 class UserUpdate(LoginRequiredMixin, UpdateView):
     model = Member
     fields = ['username', 'email', 'first_name', 'last_name']
->>>>>>> e8ecfe30d7b2c37270a13e985a474c35bd6e485b
+
+    def dispatch(self, request, *args, **kwargs):
+        requested_user = self.get_object()
+        current_user = request.user
+        print(current_user.has_perm("view_member", requested_user))
+        if current_user.has_perm("view_member", requested_user):
+            return super(UserUpdate, self).dispatch(request, *args, **kwargs)
+        else:
+            return HttpResponse(status=401)
 
 # helper function
 def get_owed(household_id, current_user_id):
@@ -216,55 +221,6 @@ def remove_expense(request, household_id, expense_id):
         'user': request.user,
         'expense': expense
     })
-<<<<<<< HEAD
-=======
-
-def signup(request):
-    error_message = ''
-    if request.method == 'POST':
-        form = MemberCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('households_index')
-        else:
-            error_message = 'Invalid sign up. Please try again.'
-    form = MemberCreationForm()
-    context = {'form': form, 'error_message': error_message}
-    return render(request, 'registration/signup.html', context)
-
-# def delete_household(request):
-#     households = Household.objects.filter()
-#     return render(request, households/index.html",{
-
-#     })
-
-class HouseholdCreate(LoginRequiredMixin, CreateView):
-    model = Household
-    fields = ['name']
-    success_url = '/households/'
-
-    def form_valid(self, form):
-        new_household = form.save()
-        Member.objects.get(id=self.request.user.id).households.add(new_household.id)
-        return super().form_valid(form)
-
-@login_required
-def add_expense(request, household_id):
-    form = ExpenseForm(request.POST)
-    if form.is_valid():
-        member = Member.objects.get(id=request.user.id)
-        new_expense = form.save(commit=False)
-        new_expense.member_id = request.user.id
-        new_expense.household_id = household_id
-        new_expense.save()
-        household_members = new_expense.household.members.exclude(id=request.user.id)
-        AMOUNTOWED = new_expense.cost / (household_members.count() + 1)
-        for member in household_members:
-            new_split = Split(amount_owed=AMOUNTOWED, member=member, expense=new_expense)
-            print(new_split)
-            new_split.save()
-    return redirect('households_details', household_id=household_id)
 
 def expense_splits(request, household_id, member_id):
     user_splits = Split.objects.filter(expense__member=request.user.id, member=member_id, has_paid=False)
@@ -276,4 +232,3 @@ def expense_splits(request, household_id, member_id):
         'member': Member.objects.get(id=member_id),
         'ledger': ledger.items()
     })
->>>>>>> e8ecfe30d7b2c37270a13e985a474c35bd6e485b
