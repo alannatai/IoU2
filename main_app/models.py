@@ -34,7 +34,7 @@ class Expense(models.Model):
         return f"{self.member.username} added {self.name} for {self.cost}"
 
     def get_absolute_url(self):
-        return reverse("expenses_detail", kwargs={"expense_id": self.pk, "household_id": self.household.pk})
+        return reverse("households_details", kwargs={"household_id": self.household.pk})
     
 
 class Split(models.Model):
