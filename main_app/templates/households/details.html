@@ -60,46 +60,39 @@
           <br/>
         </div>
         <div class="card-action">
-          <a href="{% url 'expenses_detail' household.id expense.id %}">Details</a>
-          <a class="modal-trigger" href="#modal2">DETAILS modal</a>
+          <a class="modal-trigger" href="#{{expense.name}}">Details</a>
         </div>
       </div>
-      {% endfor %}
-    {% else %}
-    <h2>There are no expenses. Enter your first expense by pressing "Add Expense" at the top left of the page.</h2>
-    {% endif %}
-  </div>
-</div>
-
-<!-- View Expense Details Modal -->
-<div id="modal2" class="modal">
-  <div class="modal-content">
-    <div class="modal-header right">
-      <big><a href="#!" class="modal-close waves-effect waves-red btn-flat">&#10005;</a></big>
-    </div>
-      <h4>Expense</h4>
-      <h4> {{ expense.name }}</h4>
-
-      <div class="row">
-        <div class="col s12 m6">
+      <!-- View Expense Details Modal -->
+      <div id="{{expense.name}}" class="modal">
         <div class="card">
-        <div class="card-content">
-        <p>Who paid: {{ expense.member.username }}
-        <p>Cost: ${{ expense.cost }}</p>
-      <hr>
-
-<p>Details for: {{ expense }} </p>
-
-{% for split in splits %}
-  <div class="card">
-    <div class="card-content">
-      <span class="card-title"></span>
-        <form action="/">
-          <input type="checkbox" name="membername" value="splits">{{member}}<br>
-        </form>
+          <div class="card-content">
+            <div class="modal-content">
+              <div class="modal-header right">
+                <big><a href="#!" class="modal-close waves-effect waves-red btn-flat">&#10005;</a></big>
+              </div>
+                <h4>{{ expense.name }} Details</h4>
+                <hr/>
+                <p>Who paid: {{ expense.member.username }}</p>
+                <p>Cost: ${{ expense.cost|floatformat:2 }}</p>
+                <p>Desc: {{ expense.description }}</p>
+                <br/>
+                <p>[{{expense.date}}] - {{expense.member.username}} added {{expense.name}} for ${{expense.cost|floatformat:2}}.</p>
+                <br/>
+                  <div class="card-action">
+                    <a class="modal-trigger" href="{{url}}">Edit</a>
+                    <a href="{{url}}">Delete</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+        {% endfor %}
+        {% else %}
+        <h2>There are no expenses. Enter your first expense by pressing "Add Expense" at the top left of the page.</h2>
+        {% endif %}
       </div>
     </div>
-  {% endfor %}
   </div>
 </div>
 

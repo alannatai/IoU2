@@ -238,3 +238,6 @@ def expense_splits(request, household_id, member_id):
         'member': Member.objects.get(id=member_id),
         'ledger': ledger.items()
     })
+
+class ExpenseView(CreateView):
+    template_name = 'expense/details.html'
