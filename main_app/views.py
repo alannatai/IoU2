@@ -125,18 +125,24 @@ def households_details(request, household_id):
     household = Household.objects.get(pk=household_id)
     if request.user.has_perm("view_household", household):
         expense_form = ExpenseForm()
-        ledger = get_owed(household_id, request.user.id)
+        ledger = get_owed(household_id, request.user.id).items()
+        ledger_splits = { }
+
+        for member, amount in ledger:
+            member_splits = list(Split.objects.filter(expense__member=member.id, member=request.user.id, has_paid=False))
+            user_splits = list(Split.objects.filter(expense__member=request.user.id, member=member.id, has_paid=False))
+            ledger_splits[member] = member_splits + user_splits
         is_admin = request.user.has_perm("change_household", household)
         return render(request, 'households/details.html', {
             'user': request.user,
             "is_admin": is_admin,
             'household': household,
             'expense_form': expense_form,
-            'ledger': ledger.items(),
+            'ledger': ledger,
+            'ledger_splits': ledger_splits.items()
         })
     else:
         return HttpResponse(status=401)
-
 @login_required
 def households_update(request, household_id):
     household = Household.objects.get(pk=household_id)
