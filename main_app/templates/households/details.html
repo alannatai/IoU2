@@ -41,6 +41,7 @@
 
 <div id="modal2" class="modal">
   <div class="modal-content">
+    <h3>Clear balances</h3>
     {% for member, amount in ledger %}
       <p>{{ member.username }} owes you: ${{ amount|floatformat:2 }}
         {% if amount < 0 %}
