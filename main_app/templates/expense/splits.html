@@ -1,0 +1,18 @@
+{% extends 'base.html' %} {% block content %}
+
+<h1>{{ member.username }} Ledger</h1>
+{% for ledger_member, amount in ledger %}
+    {% if ledger_member == member %}
+        <h2>${{ amount|floatformat:2 }}</h2>
+    {% endif %}
+{% endfor %}
+
+{% for member_split in member_splits %}
+    <p>{{ member_split }}</p>
+{% endfor %}
+
+{% for user_split in user_splits %}
+    <p>{{ user_split }}</p>
+{% endfor %}
+
+{% endblock %}
