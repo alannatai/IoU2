@@ -31,7 +31,7 @@ class Expense(models.Model):
     description = models.CharField(max_length=100)
 
     def __str__(self):
-        return f"{self.member.username} bought {self.name} for {self.cost}"
+        return f"{self.member.username} added {self.name} for {self.cost}"
 
     def get_absolute_url(self):
         return reverse("expenses_detail", kwargs={"expense_id": self.pk, "household_id": self.household.pk})

@@ -97,6 +97,13 @@ def has_paid(request, household_id, member_id):
                     split_row.save()
     return redirect('households_details', household_id=household_id)
 
+def has_paid_split(request, household_id, split_id):
+    print('split_id', split_id)
+    split = Split.objects.get(id=split_id)
+    print(split)
+    split.has_paid = True
+    split.save()
+    return redirect('households_details', household_id=household_id)
 
 class HouseholdCreate(LoginRequiredMixin, CreateView):
     model = Household
@@ -133,6 +140,7 @@ def households_details(request, household_id):
             user_splits = list(Split.objects.filter(expense__member=request.user.id, member=member.id, has_paid=False))
             ledger_splits[member] = member_splits + user_splits
         is_admin = request.user.has_perm("change_household", household)
+
         return render(request, 'households/details.html', {
             'user': request.user,
             "is_admin": is_admin,
@@ -143,6 +151,7 @@ def households_details(request, household_id):
         })
     else:
         return HttpResponse(status=401)
+        
 @login_required
 def households_update(request, household_id):
     household = Household.objects.get(pk=household_id)
