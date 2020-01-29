@@ -1,27 +1,15 @@
 {% extends 'base.html' %} {% block content %}
 
-<div class="row">
-    <div class="col s12 m6">
-    <div class="card">
-    <div class="card-content">
-    <h4>{{ expense.name }}</h4>
-    <p>Who paid: {{ expense.member.username }}
-    <p>Cost: ${{ expense.cost }}</p>
+{% comment %} <h3><strong>{{ expense.member.username }}</strong> paid:</h3> {% endcomment %}
+<h3>Details for {{ expense.name }}:</h3>
+<p>Cost: ${{ expense.cost }}</p>
 
 <hr>
 
+<p>Details: {{ expense }} </p>
+<div class="card-action">
+    <a href="{% url 'expense_update' household.id expense.id %}">Edit Expense</a>
+    <a href="{% url 'remove_expense' household.id expense.id %}">Delete Expense</a>
+</div>
 
-<p>Details for: {{ expense }} </p>
-
-{% for split in splits %}
-    <div class="card">
-        <div class="card-content">
-            <span class="card-title"></span>
-            <form action="/">
-                <input type="checkbox" name="membername" value="splits"> {{member}}<br>
-            </form>
-        </div>
-    </div>
-{% endfor %}
-    
 {% endblock %}
