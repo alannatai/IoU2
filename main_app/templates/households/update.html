@@ -10,10 +10,24 @@
       {{ household_form.as_p }}
       <input type="submit" class="btn" value="Update Household">
     </form>
+    <a href="#confirm-modal" class="btn red darken-1 modal-trigger">Delete Household</a>
   </div>
 </div>
+<div id="confirm-modal" class="modal">
+    <div class="modal-content">
+      <h4>Delete <span class="indigo-text">{{ household.name }}</span></h4>
+      <p>Is u sure mf??!?!?!?!?!?!?</p>
+    </div>
+    <div class="modal-footer">
+      <a href="{% url 'households_delete' household.id %}" class="modal-close waves-effect waves-green btn">Delete</a>
+    </div>
+  </div>
 <script type="text/javascript">
   var selectEl = document.getElementById('id_members');
   M.FormSelect.init(selectEl);
+
+  $(document).ready(function(){
+    $('.modal').modal();
+  });
 </script>
 {% endblock %}
