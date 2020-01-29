@@ -133,6 +133,7 @@ def households_details(request, household_id):
     if request.user.has_perm("view_household", household):
         expense_form = ExpenseForm()
         ledger = get_owed(household_id, request.user.id).items()
+        sorted_ledger = sorted(ledger, key=lambda item: item[1])
         ledger_splits = { }
 
         for member, amount in ledger:
@@ -146,12 +147,12 @@ def households_details(request, household_id):
             "is_admin": is_admin,
             'household': household,
             'expense_form': expense_form,
-            'ledger': ledger,
+            'sorted_ledger': sorted_ledger,
             'ledger_splits': ledger_splits.items()
         })
     else:
         return HttpResponse(status=401)
-        
+
 @login_required
 def households_update(request, household_id):
     household = Household.objects.get(pk=household_id)

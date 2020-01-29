@@ -72,7 +72,7 @@
 
   <div class="col s5">
       <ul class="collapsible popout">
-          {% for ledger_member, amount in ledger %}
+          {% for ledger_member, amount in sorted_ledger %}
           <li>
               <div class="collapsible-header">
                   <article class="center-align">{{ ledger_member.username }}
