@@ -97,6 +97,13 @@ def has_paid(request, household_id, member_id):
                     split_row.save()
     return redirect('households_details', household_id=household_id)
 
+def has_paid_split(request, household_id, split_id):
+    print('split_id', split_id)
+    split = Split.objects.get(id=split_id)
+    print(split)
+    split.has_paid = True
+    split.save()
+    return redirect('households_details', household_id=household_id)
 
 class HouseholdCreate(LoginRequiredMixin, CreateView):
     model = Household
@@ -133,6 +140,7 @@ def households_details(request, household_id):
             user_splits = list(Split.objects.filter(expense__member=request.user.id, member=member.id, has_paid=False))
             ledger_splits[member] = member_splits + user_splits
         is_admin = request.user.has_perm("change_household", household)
+
         return render(request, 'households/details.html', {
             'user': request.user,
             "is_admin": is_admin,
@@ -143,6 +151,7 @@ def households_details(request, household_id):
         })
     else:
         return HttpResponse(status=401)
+
 @login_required
 def households_update(request, household_id):
     household = Household.objects.get(pk=household_id)
@@ -227,12 +236,17 @@ def expenses_detail(request, household_id, expense_id):
 @login_required
 def remove_expense(request, household_id, expense_id):
     # if request.user.has_perm("delete_expense", expense):
-    # TODO
-    expense = Expense.objects.remove(id=expense_id),
-    return render(request, "expense/", {
-        'user': request.user,
-        'expense': expense
-    })
+    expense = Expense.objects.get(id = expense_id)
+    expense.delete()
+    return redirect('households_details', household_id=household_id)
+
+def edit_expense(request, household_id, expense_id):
+    # if request.user.has_perm("edit_expense", expense):
+    expense = Expense.objects.get(id = expense_id)
+    expense.name = expense(name)
+    expense.cost = expense(cost)
+    expense.update()
+    return redirect('households_details', household_id=household_id)
 
 def expense_splits(request, household_id, member_id):
     user_splits = Split.objects.filter(expense__member=request.user.id, member=member_id, has_paid=False)
@@ -245,5 +259,6 @@ def expense_splits(request, household_id, member_id):
         'ledger': ledger.items()
     })
 
-class ExpenseView(CreateView):
-    template_name = 'expense/details.html'
+class ExpenseUpdate(LoginRequiredMixin, UpdateView):
+    model = Expense
+    fields = ['name', 'cost', 'description']
