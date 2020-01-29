@@ -28,13 +28,11 @@ def households_index(request):
         'households': households
     })
 
-def users_detail(request, member_id):
-  return render(request, 'users/details.html', {
-    'user': request.user
-  })
+class UserUpdate(LoginRequiredMixin, UpdateView):
+    model = Member
+    fields = ['username', 'email', 'first_name', 'last_name']
 
 def get_owed(household_id, current_user_id):
-    # how much you owe people will be positive, if negative, that means people owe you
     ledger = { }
     
     for expense_row in Expense.objects.filter(household=household_id):
@@ -160,3 +158,14 @@ def add_expense(request, household_id):
             print(new_split)
             new_split.save()
     return redirect('households_details', household_id=household_id)
+
+def expense_splits(request, household_id, member_id):
+    user_splits = Split.objects.filter(expense__member=request.user.id, member=member_id, has_paid=False)
+    member_splits = Split.objects.filter(expense__member=member_id, member=request.user.id, has_paid=False)
+    ledger = get_owed(household_id, request.user.id)
+    return render(request, 'expense/splits.html', {
+        'user_splits': user_splits,
+        'member_splits': member_splits,
+        'member': Member.objects.get(id=member_id),
+        'ledger': ledger.items()
+    })
