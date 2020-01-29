@@ -176,10 +176,16 @@ def households_update(request, household_id):
         return HttpResponse(status=401)
 
 # TODO
-# def delete_household(request):
-#     households = Household.objects.filter()
-#     return render(request, households/index.html",{
-#     })
+def households_delete(request, household_id):
+    household = Household.objects.get(pk=household_id)
+    if request.user.has_perm("delete_household", household):
+        household_groups = Group.objects.filter(name__in=[f"household_{household_id}", f"household_{household_id}_admins"])
+        print(household_groups)
+        household_groups.delete()
+        household.delete()
+        return redirect("households_index")
+    else:
+        return HttpResponse(status=401)
 
 @login_required
 def add_expense(request, household_id):
