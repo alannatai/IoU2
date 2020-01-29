@@ -2,24 +2,13 @@
 {% block content %}
 
 <br>
-<!-- Title -->
+<a class="waves-effect waves-light btn modal-trigger"
+href="#modal1">ADD EXPENSE</a>
+
+<a class="waves-effect waves-light btn{% if not is_admin %} disabled{% endif %}" href="{% url 'households_update' household.id %}">Edit Household</a>
 
 <h2>{{ household.name }} - Total Expenses</h2>
-<!-- Modal Triggers and sub nav -->
 
-<div class="row">
-  <div class="col 1">
-    <a class="waves-effect waves-light btn modal-trigger" href="#modal1">ADD EXPENSE</a>
-  </div>
-  <div class="col 1">
-    <a class="waves-effect waves-light btn" href="{% url 'households_update' household.id %}">EDIT HOUSEHOLD</a>
-  </div>
-  <div class="col 1">
-    <a class="waves-effect waves-light btn modal-trigger" href="#modal2">BALANCES</a>
-  </div>
-</div>
-
-<!-- Add Expense Modal Structure -->
 <div id="modal1" class="modal">
   <div class="modal-content">
     <div class="modal-footer">
@@ -37,56 +26,45 @@
   </div>
 </div>
 
-<!-- Who Owes Who Modal-->
+<ul class="collapsible popout">
+  
+        {% for ledger_member, amount in ledger %}
+        <li>
+            <div class="collapsible-header">
+            {{ ledger_member.username }}: ${{ amount|floatformat:2 }}
+            {% if amount < 0 %}
+                <a href="{% url 'has_paid' household.id ledger_member.id %}" onclick="return confirm('Are you sure?')" class="waves-effect waves-light btn">PAID</a>
+            {% endif %}
+       </div> 
+       <div class="collapsible-body">
+            {% for member, splits in ledger_splits %}
+                {% if ledger_member == member %}
+                    <ul>
+                      {% for split in splits %}
+                          <li>{{ split }}</li>
+                      {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endfor %}
+          </div> 
+        </li>
+        {% endfor %}
 
-<div id="modal2" class="modal">
-  <div class="modal-content">
-    <h3>Clear balances</h3>
-    {% for member, amount in ledger %}
-      <p>{{ member.username }} owes you: ${{ amount|floatformat:2 }}
-        {% if amount < 0 %}
-          <a href="{% url 'has_paid' household.id member.id %}" class="waves-effect waves-light red btn modal-trigger" onclick="return confirm(Are you sure? {{member.username}} will have their balance cleared on this expense.">MARK AS PAID</a>
-        {% endif %}
-      {% endfor %}
-    </p>
-  </div>
-</div>
-
-
-
-    </div>
-    {% comment %} <div class="modal-footer">
-        <a href="#modal3" class="waves-effect waves-light btn modal-trigger">MARK AS PAID</a>
-    </div> {% endcomment %}
-</div>
-<div id="modal3" class="modal">
-    <div class="modal-content">
-
-{% for member, amount in ledger %}
-  <p>{{ member.username }} owes you: ${{ amount|floatformat:2 }}
-      {% if amount < 0 %}
-        <a href="{% url 'has_paid' household.id member.id %}" onclick="return confirm('Are you sure {{member.username}} has settled their balance?')">CLEAR BALANCE</a>
-      {% endif %}
-      {% endfor %}
-  </p>
-  </div>
-</div>
-<br/>
-<br/>
+</ul>
 
 
-<!-- All Household Expenses -->
 <div class="row">
-  <div class="col s12"> {% comment %} add m6 to create half page {% endcomment %}
+  <div class="col s12 m6">
     {% if household.expense_set.all|length > 0 %}
       {% for expense in household.expense_set.all %}
       <div class="card">
         <div class="card-content">
-          <span class="card-title left">{{ expense.name }}</span><span class="card-title right">${{ expense.cost|floatformat:2 }}</span><br/><br/>
-          <p>Created by: {{ expense.member.username }}</p>
+          <span class="card-title left">{{ expense.name }}</span><span class="card-title right">${{ expense.cost|floatformat:2 }}</span>
+          <br/>
         </div>
         <div class="card-action">
-          <a href="{% url 'expenses_detail' household.id expense.id %}">Details</a>
+          <a href="{% url 'expenses_detail' household.id expense.id %}"
+            >Details</a>
         </div>
       </div>
       {% endfor %}
@@ -99,6 +77,7 @@
 <script>
 $(document).ready(function () {
     $('.modal').modal();
+    $('.collapsible').collapsible();
 });
 </script>
 

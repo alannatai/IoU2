@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from datetime import datetime
+from django.urls import reverse
 
 class Household(models.Model):
     name = models.CharField(max_length=50)
@@ -17,16 +18,9 @@ class Member(AbstractUser):
 
     def __str__(self):
         return f"Member: {self.username}"
-
-# 'signals' so our Member model will auto create/update when User is created/updated
-# @receiver(post_save, sender=User)
-# def create_user_member(sender, instance, created, **kwargs):
-#     if created:
-#         Member.objects.create(user=instance)
-#
-# @receiver(post_save, sender=User)
-# def save_user_member(sender, instance, **kwargs):
-#     instance.member.save()
+    
+    def get_absolute_url(self):
+        return reverse('user_update', kwargs={'pk': self.id})
 
 class Expense(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE)
@@ -35,7 +29,6 @@ class Expense(models.Model):
     cost = models.FloatField(blank=True, default=None)
     date = models.DateTimeField(default=datetime.now, blank=True)
     description = models.CharField(max_length=100)
-    
 
     def __str__(self):
         return f"{self.member.username} bought {self.name} for {self.cost}"

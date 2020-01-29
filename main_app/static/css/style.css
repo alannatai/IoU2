@@ -12,9 +12,12 @@ nav ul a {
   cursor: pointer;
 }
 
+.user-name {
+  color: #4f68ab;
+}
+
 .page-footer {
   padding: 5px 0px;
   color:rgb(0,0,0);
   background-color:rgba(0,0,0,0.5);
 }
-
