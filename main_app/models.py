@@ -22,16 +22,6 @@ class Member(AbstractUser):
     def get_absolute_url(self):
         return reverse('user_update', kwargs={'pk': self.id})
 
-# 'signals' so our Member model will auto create/update when User is created/updated
-# @receiver(post_save, sender=User)
-# def create_user_member(sender, instance, created, **kwargs):
-#     if created:
-#         Member.objects.create(user=instance)
-#
-# @receiver(post_save, sender=User)
-# def save_user_member(sender, instance, **kwargs):
-#     instance.member.save()
-
 class Expense(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE)
     household = models.ForeignKey(Household, on_delete=models.CASCADE)
@@ -39,7 +29,6 @@ class Expense(models.Model):
     cost = models.FloatField(blank=True, default=None)
     date = models.DateTimeField(default=datetime.now, blank=True)
     description = models.CharField(max_length=100)
-    
 
     def __str__(self):
         return f"{self.member.username} bought {self.name} for {self.cost}"
