@@ -4,6 +4,7 @@
     <div class="col s12 m6">
     <div class="card">
     <div class="card-content">
+    <h4>{{ expense.name }}</h4>
     <p>Who paid: {{ expense.member.username }}
     <p>Cost: ${{ expense.cost }}</p>
 
@@ -11,7 +12,6 @@
 
 
 <p>Details for: {{ expense }} </p>
-
 
 {% for split in splits %}
     <div class="card">
