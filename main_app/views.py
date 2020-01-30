@@ -201,10 +201,14 @@ def households_update(request, household_id):
             if form.is_valid():
                 new_household_members = form.cleaned_data["members"].all()
                 removed_members = previous_household_members.difference(new_household_members)
+                ledger = get_owed(household_id, request.user.id)
+                print(ledger)
                 for removed_member in removed_members:
-                    # user cant remove self from household
                     if removed_member.id == request.user.id:
                         return HttpResponse(status=403)
+                    if removed_member in ledger:
+                        return HttpResponse(status=403)
+                for removed_member in removed_members:
                     household_group.user_set.remove(removed_member)
                 added_members = new_household_members.difference(previous_household_members)
                 for added_member in added_members:
@@ -286,12 +290,21 @@ class ExpenseUpdate(LoginRequiredMixin, UpdateView):
     fields = ['name', 'cost', 'description']
 
     def dispatch(self, request, *args, **kwargs):
+        print("dispatch")
         requested_expense = self.get_object()
         current_user = request.user
         if current_user.has_perm("change_expense", requested_expense):
             return super(ExpenseUpdate, self).dispatch(request, *args, **kwargs)
         else:
             return HttpResponse(status=401)
+
+    def form_valid(self, form):
+        print("form_valid")
+        updated_expense = form.save()
+        splits = Split.objects.filter(expense=updated_expense)
+        print(splits.count())
+        splits.update(amount_owed=updated_expense.cost / (splits.count() + 1))
+        return super().form_valid(form)
 
     def get_success_url(self, **kwargs):
         return reverse('households_details', args=[self.object.household_id])
