@@ -12,7 +12,7 @@ class MyUserChangeForm(UserChangeForm):
 class MyUserAdmin(GuardedModelAdmin):
     form = MyUserChangeForm
     fieldsets = UserAdmin.fieldsets + (
-        (None, {'fields': ('households',)}),
+        (None, {'fields': ('households', 'avatar')}),
     )
 
 # Register your models here.
