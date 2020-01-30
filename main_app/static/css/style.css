@@ -97,6 +97,12 @@ nav ul a {
   height: 100% !important;
 }
 
+.household-action {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .btn-update-expense {
   display: block;
   width: 100%;
