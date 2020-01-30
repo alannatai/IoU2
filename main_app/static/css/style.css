@@ -36,7 +36,6 @@ nav ul a {
   width: 150px;
   height: 150px;
   position: relative;
-  border: 2px solid black;
 }
 
 .avatar-upload__icon {
@@ -70,8 +69,8 @@ nav ul a {
   background-color:rgba(0,0,0,0.5);
 }
 
-.modal { 
-  width: 75% !important; 
+.modal {
+  width: 75% !important;
   max-height: 330% !important;
   overflow-y: hidden !important;
 }
