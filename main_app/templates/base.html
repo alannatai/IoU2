@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto|Ubuntu&display=swap" rel="stylesheet">
     <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
@@ -24,11 +25,10 @@
                 </ul>
                     <ul class="right">
                         {% if user.is_authenticated %}
-                        <li><a href="{% url 'user_update' user.id %}"><img class="circle avatar--small" src="{{ user.avatar }}"/></a></li>
-                        <li><a href="/households">Welcome, {{user.username}}</a></li>
-                        <li><a href="/about">About IOU&#178;</a></li>
+                            <li><a href="/about">About IOU&#178;</a></li>
                             <li><a href="{% url 'households_index' %}">My Households</a></li>
                             <li><a href="{% url 'logout' %}">Log Out</a></li>
+                            <li><a href="{% url 'user_update' user.id %}"><img class="circle avatar--small" src="{{ user.avatar }}"/></a></li>
                         {% else %}
                             <li><a href="{% url 'signup' %}">Sign Up</a></li>
                             <li><a href="{% url 'login' %}">Log In</a></li>
@@ -40,8 +40,5 @@
     <main class="container">
       {% block content %} {% endblock %}
     </main>
-    <footer class="page-footer">
-      <div class="center"><p>&copy; 2020 IoU2 &nbsp;</p></div>
-    </footer>
   </body>
 </html>
