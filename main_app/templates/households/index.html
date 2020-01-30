@@ -2,7 +2,7 @@
 
 <h1>{{ user.username }}'s Households</h1>
 
-<a href="{% url 'households_create' %}">Add Household</a>
+<a class="waves-effect waves-light btn" href="{% url 'households_create' %}">Add Household</a>
 <div class="row">
   <div class="col s12 m6">
     {% for household in households %}
@@ -11,7 +11,7 @@
         <span class="card-title">{{ household.name }}</span>
       </div>
       <div class="card-action">
-        <a href="{% url 'households_details' household.id %}">Details</a>
+        <a href="{% url 'households_details' household.id %}">View Household Details</a>
       </div>
     </div>
     {% endfor %}
