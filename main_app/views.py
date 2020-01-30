@@ -98,9 +98,7 @@ def has_paid(request, household_id, member_id):
     return redirect('households_details', household_id=household_id)
 
 def has_paid_split(request, household_id, split_id):
-    print('split_id', split_id)
     split = Split.objects.get(id=split_id)
-    print(split)
     split.has_paid = True
     split.save()
     return redirect('households_details', household_id=household_id)
@@ -130,14 +128,25 @@ class HouseholdCreate(LoginRequiredMixin, CreateView):
 @login_required
 def households_details(request, household_id):
     household = Household.objects.get(pk=household_id)
+  
     if request.user.has_perm("view_household", household):
         expense_form = ExpenseForm()
         ledger = get_owed(household_id, request.user.id).items()
+        sorted_ledger = sorted(ledger, key=lambda item: item[1], reverse=True)
         ledger_splits = { }
+        expenses = []
 
+        # filter out expenses that have been paid for 
+        for expense_row in Expense.objects.filter(household=household_id):
+            for split_row in Split.objects.filter(expense=expense_row):
+                if split_row.has_paid == False:
+                      if not expense_row in expenses:
+                          expenses.append(expense_row)
+
+        # populate populate ledger_splits with members related to the ledger
         for member, amount in ledger:
-            member_splits = list(Split.objects.filter(expense__member=member.id, member=request.user.id, has_paid=False))
-            user_splits = list(Split.objects.filter(expense__member=request.user.id, member=member.id, has_paid=False))
+            member_splits = list(Split.objects.filter(expense__household=household_id, expense__member=member.id, member=request.user.id, has_paid=False))
+            user_splits = list(Split.objects.filter(expense__household=household_id, expense__member=request.user.id, member=member.id, has_paid=False))
             ledger_splits[member] = member_splits + user_splits
         is_admin = request.user.has_perm("change_household", household)
 
@@ -145,13 +154,14 @@ def households_details(request, household_id):
             'user': request.user,
             "is_admin": is_admin,
             'household': household,
+            'expenses': expenses,
             'expense_form': expense_form,
-            'ledger': ledger,
+            'ledger': sorted_ledger,
             'ledger_splits': ledger_splits.items()
         })
     else:
         return HttpResponse(status=401)
-        
+
 @login_required
 def households_update(request, household_id):
     household = Household.objects.get(pk=household_id)
@@ -185,10 +195,16 @@ def households_update(request, household_id):
         return HttpResponse(status=401)
 
 # TODO
-# def delete_household(request):
-#     households = Household.objects.filter()
-#     return render(request, households/index.html",{
-#     })
+def households_delete(request, household_id):
+    household = Household.objects.get(pk=household_id)
+    if request.user.has_perm("delete_household", household):
+        household_groups = Group.objects.filter(name__in=[f"household_{household_id}", f"household_{household_id}_admins"])
+        print(household_groups)
+        household_groups.delete()
+        household.delete()
+        return redirect("households_index")
+    else:
+        return HttpResponse(status=401)
 
 @login_required
 def add_expense(request, household_id):
@@ -235,7 +251,6 @@ def remove_expense(request, household_id, expense_id):
     return redirect('households_details', household_id=household_id)
 
 def edit_expense(request, household_id, expense_id):
-    # if request.user.has_perm("edit_expense", expense):
     expense = Expense.objects.get(id = expense_id)
     expense.name = expense(name)
     expense.cost = expense(cost)

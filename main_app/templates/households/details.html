@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
+{% load filters %}
 
 <h2>{{ household.name }} - Total Expenses</h2>
-
+<a class="waves-effect waves-light btn modal-trigger"href="#modal1">ADD EXPENSE</a>
+<a class="waves-effect waves-light btn{% if not is_admin %} disabled{% endif %}" href="{% url 'households_update' household.id %}">Edit Household</a>
 <!-- Add Expense Modal -->
 <div class="row">
   <div class="col s7">
-  <a class="waves-effect waves-light btn modal-trigger"href="#modal1">ADD EXPENSE</a>
-  <a class="waves-effect waves-light btn{% if not is_admin %} disabled{% endif %}" href="{% url 'households_update' household.id %}">Edit Household</a>
     <div id="modal1" class="modal">
       <div class="modal-content">
         <div class="modal-header right">
@@ -22,8 +22,8 @@
       </div>
     </div>
 
-    {% if household.expense_set.all|length > 0 %}
-      {% for expense in household.expense_set.all %}
+    {% if expenses|length > 0 %}
+      {% for expense in expenses %}
       <div class="card">
         <div class="card-content">
           <span class="card-title left">{{ expense.name }}</span><span class="card-title right">${{ expense.cost|floatformat:2 }}</span>
@@ -131,11 +131,14 @@
           {% for ledger_member, amount in ledger %}
           <li>
               <div class="collapsible-header">
-                  <article class="center-align">{{ ledger_member.username }}
-                      <br>
+                  <article class="center-align">
                   {% if amount < 0 %}
-                      <h3 class="blue-text text-lighten-2">${{ amount|floatformat:2 }}</h3>
+                      {{ ledger_member.username }} owes you
+                      <br>
+                      <h3 class="blue-text text-lighten-2">${{ amount|absolute|floatformat:2 }}</h3>
                   {% else %}
+                      You owe {{ ledger_member.username }}
+                      <br>
                       <h3 class="pink-text text-darken-1">${{ amount|floatformat:2 }}</h3>
                   {% endif %}
                   </article>
@@ -151,9 +154,13 @@
                           <ul>
                             {% for split in splits %}
                                 <li>
-                                    {{ split }}
-                                    {% if split.member == ledger_member %}
-                                        <a href="{% url 'has_paid_split' household.id split.id %}" onclick="return confirm('Are you sure?')" class="waves-effect waves-light btn-small">Paid</a>
+                                    {% if split.member == user %}
+                                        You owe {{split.expense.member.username}} ${{ split.amount_owed|floatformat:2 }} for {{ split.expense.name }}
+                                    {% else %}
+                                        {{ split.member.username }} owes you ${{ split.amount_owed|floatformat:2 }} for {{ split.expense.name }}
+                                    {% endif %}
+                                    {% if split.member == ledger_member and amount < 0 %}
+                                        <a href="{% url 'has_paid_split' household.id split.id %}" onclick="return confirm('Are you sure?')">Paid</a>
                                     {% endif %}
                                 </li>
                             {% endfor %}

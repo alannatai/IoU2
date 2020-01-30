@@ -34,7 +34,7 @@ class Expense(models.Model):
         return f"{self.member.username} added {self.name} for {self.cost}"
 
     def get_absolute_url(self):
-        return reverse("expenses_detail", kwargs={"expense_id": self.pk, "household_id": self.household.pk})
+        return reverse("households_details", kwargs={"household_id": self.household.pk})
     
 
 class Split(models.Model):
@@ -44,4 +44,4 @@ class Split(models.Model):
     amount_owed = models.FloatField()
 
     def __str__(self):
-        return f"{self.member.username} needs to pay ${self.amount_owed} for {self.expense.name}."
+        return f"{self.member.username} owes {self.expense.member} ${self.amount_owed} for {self.expense.name}."
