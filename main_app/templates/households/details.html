@@ -96,7 +96,7 @@
                             {% for split in splits %}
                                 <li>
                                     {{ split }}
-                                    {% if split.member == ledger_member %}
+                                    {% if split.member == ledger_member and amount < 0 %}
                                         <a href="{% url 'has_paid_split' household.id split.id %}" onclick="return confirm('Are you sure?')">Paid</a>
                                     {% endif %}
                                 </li>
