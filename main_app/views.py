@@ -6,7 +6,7 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from .forms import HouseholdForm, ExpenseForm
-
+from django.urls import reverse
 from django.contrib.auth.models import Group
 from guardian.shortcuts import assign_perm, remove_perm
 
@@ -272,4 +272,5 @@ class ExpenseUpdate(LoginRequiredMixin, UpdateView):
     model = Expense
     fields = ['name', 'cost', 'description']
 
-
+    def get_success_url(self, **kwargs):
+        return reverse('households_details', args=[self.object.household_id])
