@@ -2,15 +2,18 @@
 
 {% block content %}
 <div class="row">
-  <div class="col s2">
-    <img class="circle responsive-img" src="/static/images/no_avatar.webp">
-  </div>
-  <div class="col s10">
-    <h3>Edit <span class="user-name">{{ member.username }}</span> Details</h3>
+  <div class="col s8 offset-s2 m4 centered">
+    <!-- /static/images/no_avatar.webp -->
+    <a href="#avatar-upload" class="circle modal-trigger avatar-upload">
+      <img class="circle responsive-img avatar" src="{{ member.avatar }}">
+      <i class="material-icons small avatar-upload__icon">add</i>
+    </a>
 
   </div>
+  <div class="col s12 m8">
+    <h3>Edit <span class="user-name">{{ member.username }}</span> Details</h3>
+  </div>
   <div class="col s12">
-    <a href="#avatar-upload" class="btn blue lighten-1">Upload Avatar</a>
     <form action="" method="post">
       {% csrf_token %}
       <table>
@@ -21,4 +24,22 @@
   </div>
 </div>
 
+<!-- Modal Structure -->
+<div id="avatar-upload" class="modal">
+  <div class="modal-content">
+    <h4>Upload Avatar</h4>
+    <p>Please select a file:</p>
+    <form class="" action="{% url 'add_avatar' member.id  %}" enctype="multipart/form-data" method="post">
+      {% csrf_token %}
+      <input type="file" name="photo-file">
+      <input type="submit" value="Upload" class="btn">
+    </form>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function () {
+    $('.modal').modal();
+  });
+</script>
 {% endblock %}

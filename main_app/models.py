@@ -15,7 +15,7 @@ class Household(models.Model):
 
 class Member(AbstractUser):
     households = models.ManyToManyField(Household, related_name="households")
-    # avatar = models.CharField(max_length=200)
+    avatar = models.CharField(max_length=200, default="/static/images/no_avatar.webp")
 
     def __str__(self):
         return f"Member: {self.username}"

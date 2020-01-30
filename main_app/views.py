@@ -65,6 +65,7 @@ class UserUpdate(LoginRequiredMixin, UpdateView):
         requested_user = self.get_object()
         current_user = request.user
         print(current_user.has_perm("view_member", requested_user))
+        print(current_user.avatar)
         if current_user.has_perm("view_member", requested_user):
             return super(UserUpdate, self).dispatch(request, *args, **kwargs)
         else:
@@ -102,8 +103,9 @@ def has_paid(request, household_id, member_id):
                     split_row.save()
     return redirect('households_details', household_id=household_id)
 
-def add_avatar(request, member_id):
+def add_avatar(request, pk):
     photo_file = request.FILES.get('photo-file', None)
+    print(photo_file)
     if photo_file:
         session = boto3.Session(profile_name='iou2')
         s3 = session.client('s3')
@@ -114,12 +116,12 @@ def add_avatar(request, member_id):
             s3.upload_fileobj(photo_file, BUCKET, key)
             # build the full url string
             url = f"{S3_BASE_URL}{BUCKET}/{key}"
-            member = Member.objects.get(pk=member_id)
+            member = Member.objects.get(pk=pk)
             member.avatar = url
             member.save()
         except:
             print('An error occurred uploading file to S3')
-    return redirect('user_update', pk=member_id)
+    return redirect('user_update', pk=pk)
 
 def has_paid_split(request, household_id, split_id):
     print('split_id', split_id)

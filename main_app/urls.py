@@ -16,5 +16,6 @@ urlpatterns = [
   path('households/<int:household_id>/<int:member_id>/has_paid/', views.has_paid, name='has_paid'),
   path('households/<int:household_id>/<int:split_id>/has_paid_split/', views.has_paid_split, name='has_paid_split'),
   path('users/<int:pk>/update/', views.UserUpdate.as_view(), name='user_update'),
+  path('users/<int:pk>/update/add_avatar/', views.add_avatar, name='add_avatar'),
   path('accounts/signup/', views.signup, name='signup')
 ]
