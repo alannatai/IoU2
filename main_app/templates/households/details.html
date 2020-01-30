@@ -26,7 +26,10 @@
       {% for expense in expenses %}
       <div class="card">
         <div class="card-content">
-          <span class="card-title left">{{ expense.name }}</span><span class="card-title right">${{ expense.cost|floatformat:2 }}</span>
+          <span class="card-title left">{{ expense.name }}</span><span class="card-title right">${{ expense.cost|floatformat:2 }}
+            <br>
+            <span class="right" style="font-size: 12px">{{ expense.member.username }}</span>
+          </span>
           <br/>
         </div>
         <div class="card-action">

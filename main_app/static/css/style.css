@@ -2,6 +2,18 @@
   opacity: 0.3;
 }
 
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+h2 {
+  font-family: 'Ubuntu', sans-serif;
+}
+
+main {
+  padding-top: 50px;
+}
+
 nav ul a {
   -webkit-transition: background-color 0.3s;
   transition: background-color 0.3s;
@@ -10,6 +22,11 @@ nav ul a {
   display: block;
   padding: 0 15px;
   cursor: pointer;
+}
+
+.card .card-content {
+  padding: 24px 24px 48px 24px;
+  border-radius: 0 0 2px 2px;
 }
 
 .centered {
@@ -31,7 +48,7 @@ nav ul a {
 .avatar--small {
   width: 50px;
   height: 50px;
-  margin-top: 6px;
+  margin-top: 3px;
 }
 
 .avatar-upload {
@@ -113,4 +130,34 @@ nav ul a {
   margin-left: auto;
   margin-right: auto;
   width: 50%;
+}
+
+nav .brand-logo {
+  height: 56px;
+}
+.brand-logo > img {
+  height: 56px;
+}
+
+.avatar-container {
+  height: 56px;
+}
+
+.sidenav li>a.avatar-container {
+  height: 56px;
+}
+
+@media screen and (min-width: 601px) {
+  nav .brand-logo {
+    height: 64px;
+  }
+  .brand-logo > img {
+    height: 64px;
+  }
+  .avatar-container {
+    height: 64px;
+  }
+  .avatar--small {
+    margin-top: 6px;
+  }
 }
