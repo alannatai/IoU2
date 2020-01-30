@@ -240,7 +240,6 @@ def remove_expense(request, household_id, expense_id):
     return redirect('households_details', household_id=household_id)
 
 def edit_expense(request, household_id, expense_id):
-    # if request.user.has_perm("edit_expense", expense):
     expense = Expense.objects.get(id = expense_id)
     expense.name = expense(name)
     expense.cost = expense(cost)
