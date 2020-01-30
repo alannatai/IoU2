@@ -286,12 +286,21 @@ class ExpenseUpdate(LoginRequiredMixin, UpdateView):
     fields = ['name', 'cost', 'description']
 
     def dispatch(self, request, *args, **kwargs):
+        print("dispatch")
         requested_expense = self.get_object()
         current_user = request.user
         if current_user.has_perm("change_expense", requested_expense):
             return super(ExpenseUpdate, self).dispatch(request, *args, **kwargs)
         else:
             return HttpResponse(status=401)
+
+    def form_valid(self, form):
+        print("form_valid")
+        updated_expense = form.save()
+        splits = Split.objects.filter(expense=updated_expense)
+        print(splits.count())
+        splits.update(amount_owed=updated_expense.cost / (splits.count() + 1))
+        return super().form_valid(form)
 
     def get_success_url(self, **kwargs):
         return reverse('households_details', args=[self.object.household_id])
