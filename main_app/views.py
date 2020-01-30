@@ -101,27 +101,35 @@ def has_paid(request, household_id, member_id):
 
 def add_avatar(request, pk):
     photo_file = request.FILES.get('photo-file', None)
-    if photo_file:
-        s3 = boto3.client('s3')
-        # need a unique "key" for S3 / needs image file extension too
-        key = uuid.uuid4().hex[:6] + photo_file.name[photo_file.name.rfind('.'):]
-        # just in case something goes wrong
-        try:
-            s3.upload_fileobj(photo_file, BUCKET, key)
-            # build the full url string
-            url = f"{S3_BASE_URL}{BUCKET}/{key}"
-            member = Member.objects.get(pk=pk)
-            member.avatar = url
-            member.save()
-        except:
-            print('An error occurred uploading file to S3')
-    return redirect('user_update', pk=pk)
+    member = Member.objects.get(pk=pk)
+    if request.user.has_perm("change_member", member):
+        if photo_file:
+            s3 = boto3.client('s3')
+            # need a unique "key" for S3 / needs image file extension too
+            key = uuid.uuid4().hex[:6] + photo_file.name[photo_file.name.rfind('.'):]
+            # just in case something goes wrong
+            try:
+                s3.upload_fileobj(photo_file, BUCKET, key)
+                # build the full url string
+                url = f"{S3_BASE_URL}{BUCKET}/{key}"
+
+                member.avatar = url
+                member.save()
+            except:
+                print('An error occurred uploading file to S3')
+        return redirect('user_update', pk=pk)
+    else:
+        return HttpResponse(status=401)
 
 def has_paid_split(request, household_id, split_id):
     split = Split.objects.get(id=split_id)
-    split.has_paid = True
-    split.save()
-    return redirect('households_details', household_id=household_id)
+    expense = split.expense
+    if request.user.has_perm("change_expense", expense):
+        split.has_paid = True
+        split.save()
+        return redirect('households_details', household_id=household_id)
+    else:
+        return HttpResponse(status=401)
 
 class HouseholdCreate(LoginRequiredMixin, CreateView):
     model = Household
@@ -266,21 +274,12 @@ def expenses_detail(request, household_id, expense_id):
 def remove_expense(request, household_id, expense_id):
     expense = Expense.objects.get(id=expense_id)
     if request.user.has_perm("delete_expense", expense):
+        remove_perm("change_expense", request.user, expense)
+        remove_perm("delete_expense", request.user, expense)
         expense.delete()
         return redirect('households_details', household_id=household_id)
     else:
         return HttpResponse(status=401)
-
-def expense_splits(request, household_id, member_id):
-    user_splits = Split.objects.filter(expense__member=request.user.id, member=member_id, has_paid=False)
-    member_splits = Split.objects.filter(expense__member=member_id, member=request.user.id, has_paid=False)
-    ledger = get_owed(household_id, request.user.id)
-    return render(request, 'expense/splits.html', {
-        'user_splits': user_splits,
-        'member_splits': member_splits,
-        'member': Member.objects.get(id=member_id),
-        'ledger': ledger.items()
-    })
 
 class ExpenseUpdate(LoginRequiredMixin, UpdateView):
     model = Expense
