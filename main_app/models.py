@@ -45,4 +45,4 @@ class Split(models.Model):
     amount_owed = models.FloatField()
 
     def __str__(self):
-        return f"{self.member.username} needs to pay ${self.amount_owed} for {self.expense.name}."
+        return f"{self.member.username} owes {self.expense.member} ${self.amount_owed} for {self.expense.name}."

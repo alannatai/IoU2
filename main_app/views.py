@@ -6,7 +6,7 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from .forms import HouseholdForm, ExpenseForm
-
+from django.urls import reverse
 from django.contrib.auth.models import Group
 from guardian.shortcuts import assign_perm, remove_perm
 
@@ -124,9 +124,7 @@ def add_avatar(request, pk):
     return redirect('user_update', pk=pk)
 
 def has_paid_split(request, household_id, split_id):
-    print('split_id', split_id)
     split = Split.objects.get(id=split_id)
-    print(split)
     split.has_paid = True
     split.save()
     return redirect('households_details', household_id=household_id)
@@ -156,14 +154,25 @@ class HouseholdCreate(LoginRequiredMixin, CreateView):
 @login_required
 def households_details(request, household_id):
     household = Household.objects.get(pk=household_id)
+  
     if request.user.has_perm("view_household", household):
         expense_form = ExpenseForm()
         ledger = get_owed(household_id, request.user.id).items()
+        sorted_ledger = sorted(ledger, key=lambda item: item[1], reverse=True)
         ledger_splits = { }
+        expenses = []
 
+        # filter out expenses that have been paid for 
+        for expense_row in Expense.objects.filter(household=household_id):
+            for split_row in Split.objects.filter(expense=expense_row):
+                if split_row.has_paid == False:
+                      if not expense_row in expenses:
+                          expenses.append(expense_row)
+
+        # populate populate ledger_splits with members related to the ledger
         for member, amount in ledger:
-            member_splits = list(Split.objects.filter(expense__member=member.id, member=request.user.id, has_paid=False))
-            user_splits = list(Split.objects.filter(expense__member=request.user.id, member=member.id, has_paid=False))
+            member_splits = list(Split.objects.filter(expense__household=household_id, expense__member=member.id, member=request.user.id, has_paid=False))
+            user_splits = list(Split.objects.filter(expense__household=household_id, expense__member=request.user.id, member=member.id, has_paid=False))
             ledger_splits[member] = member_splits + user_splits
         is_admin = request.user.has_perm("change_household", household)
 
@@ -171,8 +180,9 @@ def households_details(request, household_id):
             'user': request.user,
             "is_admin": is_admin,
             'household': household,
+            'expenses': expenses,
             'expense_form': expense_form,
-            'ledger': ledger,
+            'ledger': sorted_ledger,
             'ledger_splits': ledger_splits.items()
         })
     else:
@@ -287,3 +297,6 @@ def expense_splits(request, household_id, member_id):
 class ExpenseUpdate(LoginRequiredMixin, UpdateView):
     model = Expense
     fields = ['name', 'cost', 'description']
+
+    def get_success_url(self, **kwargs):
+        return reverse('households_details', args=[self.object.household_id])
