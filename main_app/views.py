@@ -107,8 +107,7 @@ def add_avatar(request, pk):
     photo_file = request.FILES.get('photo-file', None)
     print(photo_file)
     if photo_file:
-        session = boto3.Session(profile_name='iou2')
-        s3 = session.client('s3')
+        s3 = boto3.client('s3')
         # need a unique "key" for S3 / needs image file extension too
         key = uuid.uuid4().hex[:6] + photo_file.name[photo_file.name.rfind('.'):]
         # just in case something goes wrong
@@ -154,7 +153,7 @@ class HouseholdCreate(LoginRequiredMixin, CreateView):
 @login_required
 def households_details(request, household_id):
     household = Household.objects.get(pk=household_id)
-  
+
     if request.user.has_perm("view_household", household):
         expense_form = ExpenseForm()
         ledger = get_owed(household_id, request.user.id).items()
@@ -162,7 +161,7 @@ def households_details(request, household_id):
         ledger_splits = { }
         expenses = []
 
-        # filter out expenses that have been paid for 
+        # filter out expenses that have been paid for
         for expense_row in Expense.objects.filter(household=household_id):
             for split_row in Split.objects.filter(expense=expense_row):
                 if split_row.has_paid == False:
