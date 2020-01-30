@@ -53,8 +53,8 @@
               <p>[{{expense.date}}] - {{expense.member.username}} added {{expense.name}} for ${{expense.cost|floatformat:2}}.</p>
               <br/>
               <div class="card-action">
-                <a class="left modal-trigger" href="#{{expense.name}}/edit">Edit "{{expense.name}}"</a>
-                <a class="right modal-trigger" href="#{{expense.name}}/delete">Delete {{expense.name}} from "{{household.name}}"</a>
+                <a class="left modal-trigger" href="#{{expense.name}}/edit">Edit {{expense.name}}</a>
+                <a class="right modal-trigger" href="#{{expense.name}}/delete">Delete {{expense.name}} from {{household.name}}</a>
                 
 
                 <!-- Edit Expense Modal -->
@@ -119,17 +119,6 @@
                           <div class="right">
                             <a href="#" class="modal-close">CANCEL</a>
                           </div>
-                      
-                      {% comment %} <div class="card">
-                        <div class="card-content">
-                          <div class="modal-header right">
-                            <a href="#" class="modal-close waves-effect waves-red btn-flat">&#10005;</a>
-                          </div>
-                          <div class="modal-content">
-                            <p>Are you sure you'd like to remove {{expense.name}} from this household?</p>
-                            <p><b>${{expense.cost|floatformat:2}} will be deducted from the ledger.</b></p>
-                            <div class="card-action"> {% endcomment %}
-
                         </div>
                       </div>
                     </div>
@@ -144,7 +133,7 @@
 
       {% endfor %}
     {% else %}
-        <h2>There are no expenses. Enter your first expense by pressing "Add Expense" at the top left of the page.</h2>
+        <h4>There are no expenses. Enter your first expense by pressing "Add Expense" at the top left of the page.</h4>
     {% endif %}
   </div>
 
