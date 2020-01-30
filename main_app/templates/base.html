@@ -24,11 +24,10 @@
                 </ul>
                     <ul class="right">
                         {% if user.is_authenticated %}
-                        <li><a href="{% url 'user_update' user.id %}"><img class="circle avatar--small" src="{{ user.avatar }}"/></a></li>
-                        <li><a href="/households">Welcome, {{user.username}}</a></li>
-                        <li><a href="/about">About IOU&#178;</a></li>
+                            <li><a href="/about">About IOU&#178;</a></li>
                             <li><a href="{% url 'households_index' %}">My Households</a></li>
                             <li><a href="{% url 'logout' %}">Log Out</a></li>
+                            <li><a href="{% url 'user_update' user.id %}"><img class="circle avatar--small" src="{{ user.avatar }}"/></a></li>
                         {% else %}
                             <li><a href="{% url 'signup' %}">Sign Up</a></li>
                             <li><a href="{% url 'login' %}">Log In</a></li>
@@ -40,8 +39,5 @@
     <main class="container">
       {% block content %} {% endblock %}
     </main>
-    <footer class="page-footer">
-      <div class="center"><p>&copy; 2020 IoU2 &nbsp;</p></div>
-    </footer>
   </body>
 </html>
