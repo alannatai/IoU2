@@ -25,9 +25,8 @@
                     <ul class="right">
                         {% if user.is_authenticated %}
                         <li><a href="{% url 'user_update' user.id %}"><img class="circle avatar--small" src="{{ user.avatar }}"/></a></li>
-                        <li><a href="/household">Welcome, {{user.username}}</a></li>
+                        <li><a href="/households">Welcome, {{user.username}}</a></li>
                         <li><a href="/about">About IOU&#178;</a></li>
-
                             <li><a href="{% url 'households_index' %}">My Households</a></li>
                             <li><a href="{% url 'logout' %}">Log Out</a></li>
                         {% else %}

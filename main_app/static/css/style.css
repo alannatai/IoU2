@@ -101,3 +101,10 @@ nav ul a {
   display: block;
   width: 100%;
 }
+
+.indexlogo {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
