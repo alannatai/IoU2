@@ -2,7 +2,7 @@
 {% block content %}
 {% load filters %}
 
-<h2>{{ household.name }} - Total Expenses</h2>
+<h2>{{ household.name }}</h2>
 <a class="waves-effect waves-light btn modal-trigger"href="#modal1">ADD EXPENSE</a>
 <a class="waves-effect waves-light btn{% if not is_admin %} disabled{% endif %}" href="{% url 'households_update' household.id %}">Edit Household</a>
 <!-- Add Expense Modal -->
@@ -26,7 +26,10 @@
       {% for expense in expenses %}
       <div class="card">
         <div class="card-content">
-          <span class="card-title left">{{ expense.name }}</span><span class="card-title right">${{ expense.cost|floatformat:2 }}</span>
+          <span class="card-title left">{{ expense.name }}</span><span class="card-title right">${{ expense.cost|floatformat:2 }}
+            <br>
+            <span class="right" style="font-size: 12px">{{ expense.member.username }}</span>
+          </span>
           <br/>
         </div>
         <div class="card-action">

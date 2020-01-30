@@ -7,7 +7,6 @@ from django.urls import reverse
 
 class Household(models.Model):
     name = models.CharField(max_length=50)
-    # need this to be able to edit on both ends
     members = models.ManyToManyField('Member', through='Member_households', related_name="members")
 
     def __str__(self):

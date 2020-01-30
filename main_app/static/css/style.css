@@ -2,6 +2,14 @@
   opacity: 0.3;
 }
 
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+h2 {
+  font-family: 'Ubuntu', sans-serif;
+}
+
 nav ul a {
   -webkit-transition: background-color 0.3s;
   transition: background-color 0.3s;
@@ -10,6 +18,11 @@ nav ul a {
   display: block;
   padding: 0 15px;
   cursor: pointer;
+}
+
+.card .card-content {
+  padding: 24px 24px 48px 24px;
+  border-radius: 0 0 2px 2px;
 }
 
 .centered {
