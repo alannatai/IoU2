@@ -64,8 +64,6 @@ class UserUpdate(LoginRequiredMixin, UpdateView):
     def dispatch(self, request, *args, **kwargs):
         requested_user = self.get_object()
         current_user = request.user
-        print(current_user.has_perm("view_member", requested_user))
-        print(current_user.avatar)
         if current_user.has_perm("view_member", requested_user):
             return super(UserUpdate, self).dispatch(request, *args, **kwargs)
         else:
@@ -93,8 +91,6 @@ def get_owed(household_id, current_user_id):
     return ledger
 
 def has_paid(request, household_id, member_id):
-    print('household_id', household_id)
-    print('member_id', member_id)
     for expense_row in Expense.objects.filter(household=household_id):
         if expense_row.member.id == request.user.id or expense_row.member.id == member_id:
             for split_row in Split.objects.filter(expense=expense_row.id):
@@ -105,7 +101,6 @@ def has_paid(request, household_id, member_id):
 
 def add_avatar(request, pk):
     photo_file = request.FILES.get('photo-file', None)
-    print(photo_file)
     if photo_file:
         s3 = boto3.client('s3')
         # need a unique "key" for S3 / needs image file extension too
@@ -224,7 +219,6 @@ def households_delete(request, household_id):
     household = Household.objects.get(pk=household_id)
     if request.user.has_perm("delete_household", household):
         household_groups = Group.objects.filter(name__in=[f"household_{household_id}", f"household_{household_id}_admins"])
-        print(household_groups)
         household_groups.delete()
         household.delete()
         return redirect("households_index")
@@ -274,13 +268,8 @@ def remove_expense(request, household_id, expense_id):
     if request.user.has_perm("delete_expense", expense):
         expense.delete()
         return redirect('households_details', household_id=household_id)
-
-def edit_expense(request, household_id, expense_id):
-    expense = Expense.objects.get(id=expense_id)
-    expense.name = expense(name)
-    expense.cost = expense(cost)
-    expense.update()
-    return redirect('households_details', household_id=household_id)
+    else:
+        return HttpResponse(status=401)
 
 def expense_splits(request, household_id, member_id):
     user_splits = Split.objects.filter(expense__member=request.user.id, member=member_id, has_paid=False)
@@ -296,6 +285,14 @@ def expense_splits(request, household_id, member_id):
 class ExpenseUpdate(LoginRequiredMixin, UpdateView):
     model = Expense
     fields = ['name', 'cost', 'description']
+
+    def dispatch(self, request, *args, **kwargs):
+        requested_expense = self.get_object()
+        current_user = request.user
+        if current_user.has_perm("change_expense", requested_expense):
+            return super(ExpenseUpdate, self).dispatch(request, *args, **kwargs)
+        else:
+            return HttpResponse(status=401)
 
     def get_success_url(self, **kwargs):
         return reverse('households_details', args=[self.object.household_id])
