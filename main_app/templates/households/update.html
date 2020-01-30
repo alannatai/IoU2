@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>Edit "{{ household.name }}"</h1>
+<h1>Edit {{ household.name }}</h1>
 
 <div class="row">
   <div class="col s12">
@@ -9,7 +9,7 @@
       {% csrf_token %}
       {{ household_form.as_p }}<br/>
       <input type="submit" class="btn" value="Update {{household.name}}">
-      <a href="#confirm-modal" class="btn red darken-1 modal-trigger">Delete {{household.name}}</a><br/><br/> 
+      <a href="#confirm-modal" id="second-button" class="btn red darken-1 modal-trigger">Delete {{ household.name }}</a><br/><br/> 
     </form>
   </div>
 </div>
