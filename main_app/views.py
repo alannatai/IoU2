@@ -201,10 +201,14 @@ def households_update(request, household_id):
             if form.is_valid():
                 new_household_members = form.cleaned_data["members"].all()
                 removed_members = previous_household_members.difference(new_household_members)
+                ledger = get_owed(household_id, request.user.id)
+                print(ledger)
                 for removed_member in removed_members:
-                    # user cant remove self from household
                     if removed_member.id == request.user.id:
                         return HttpResponse(status=403)
+                    if removed_member in ledger:
+                        return HttpResponse(status=403)
+                for removed_member in removed_members:
                     household_group.user_set.remove(removed_member)
                 added_members = new_household_members.difference(previous_household_members)
                 for added_member in added_members:
