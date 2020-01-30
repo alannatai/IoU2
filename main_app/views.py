@@ -271,13 +271,13 @@ def expenses_detail(request, household_id, expense_id):
 
 @login_required
 def remove_expense(request, household_id, expense_id):
-    # if request.user.has_perm("delete_expense", expense):
-    expense = Expense.objects.get(id = expense_id)
-    expense.delete()
-    return redirect('households_details', household_id=household_id)
+    expense = Expense.objects.get(id=expense_id)
+    if request.user.has_perm("delete_expense", expense):
+        expense.delete()
+        return redirect('households_details', household_id=household_id)
 
 def edit_expense(request, household_id, expense_id):
-    expense = Expense.objects.get(id = expense_id)
+    expense = Expense.objects.get(id=expense_id)
     expense.name = expense(name)
     expense.cost = expense(cost)
     expense.update()
