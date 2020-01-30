@@ -133,11 +133,11 @@
               <div class="collapsible-header">
                   <article class="center-align">
                   {% if amount < 0 %}
-                      {{ ledger_member.username }} owes you
+                      {{ ledger_member.username }} <span class="blue-text text-lighten-2">O. U.</span>
                       <br>
                       <h3 class="blue-text text-lighten-2">${{ amount|absolute|floatformat:2 }}</h3>
                   {% else %}
-                      You owe {{ ledger_member.username }}
+                      <span class="pink-text text-darken-2">U. O.</span> {{ ledger_member.username }}
                       <br>
                       <h3 class="pink-text text-darken-1">${{ amount|floatformat:2 }}</h3>
                   {% endif %}
