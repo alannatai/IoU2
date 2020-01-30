@@ -10,7 +10,7 @@
 
 ## About
 
-Welcome to the webapp that allows people to keep track of their expenses and save time calculating how much money each other owes another.
+Welcome to the webapp that allows people to keep track of their expenses and save time calculating how much money to pay one another.
 
 ## Home Page
 
@@ -62,7 +62,7 @@ https://iou2.herokuapp.com/
 
 ## Developer Profiles:
 
-Alanna Tai: https://github.com/alannatai
-Cody Breen: https://github.com/cojbr
-Emily Chow: https://github.com/emilykchow
-Louis Pham: https://github.com/louis-pham
+<a href="https://github.com/alannatai">Alanna Tai's Github<a/>
+<a href="https://github.com/cojbr">Cody Breen's Github<a/>
+<a href="https://github.com/emilykchow">Emily Chow's Github<a/>
+<a href="https://github.com/louis-pham">Louis Pham's Github<a/>
