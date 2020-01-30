@@ -35,8 +35,13 @@ class Expense(models.Model):
         return f"{self.member.username} added {self.name} for {self.cost}"
 
     def get_absolute_url(self):
+<<<<<<< HEAD
         return reverse("expenses_detail", kwargs={"expense_id": self.pk, "household_id": self.household.pk})
 
+=======
+        return reverse("households_details", kwargs={"household_id": self.household.pk})
+    
+>>>>>>> fffffcc1da787050b1b200907fd717ec4495012f
 
 class Split(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE)

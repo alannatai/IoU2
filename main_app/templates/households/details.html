@@ -1,21 +1,18 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<br>
-<a class="waves-effect waves-light btn{% if not is_admin %} disabled{% endif %}" href="{% url 'households_update' household.id %}">Edit Household</a>
-
 <h2>{{ household.name }} - Total Expenses</h2>
 
 <!-- Add Expense Modal -->
 <div class="row">
   <div class="col s7">
-    <a class="waves-effect waves-light btn modal-trigger"href="#modal1">ADD EXPENSE</a>
+  <a class="waves-effect waves-light btn modal-trigger"href="#modal1">ADD EXPENSE</a>
+  <a class="waves-effect waves-light btn{% if not is_admin %} disabled{% endif %}" href="{% url 'households_update' household.id %}">Edit Household</a>
     <div id="modal1" class="modal">
       <div class="modal-content">
         <div class="modal-header right">
-          <big><a href="#!" class="modal-close waves-effect waves-red btn-flat">&#10005;</a></big>
+          <a href="#!" class="modal-close waves-effect waves-red btn-flat">&#10005;</a>
         </div>
-
         <h4>Add an expense to {{ household.name }}</h4>
         <form action="{% url 'add_expense' household.id %}" method="post">
           {% csrf_token %}
@@ -55,19 +52,17 @@
                 <p>[{{expense.date}}] - {{expense.member.username}} added {{expense.name}} for ${{expense.cost|floatformat:2}}.</p>
                 <br/>
                 <div class="card-action">
-                  <a class="modal-trigger" href="{{url}}">Edit</a>
-                  <a href="{{url}}">Delete</a>
+                  <a class="modal-trigger" href="{% url 'expense_update' household.id expense.id %}">Edit</a>
+                  <a href="{% url 'remove_expense' household.id expense.id %}">Delete</a>
                 </div>
-
+              </div>
             </div>
           </div>
         </div>
-      </div>
       {% endfor %}
     {% else %}
         <h2>There are no expenses. Enter your first expense by pressing "Add Expense" at the top left of the page.</h2>
     {% endif %}
-
   </div>
 
   <div class="col s5">
