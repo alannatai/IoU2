@@ -58,6 +58,8 @@ https://trello.com/b/QC2QzYB1/project-3-iou2
 
 ## Link to Heroku:
 
+https://iou2.herokuapp.com/
+
 ## Developer Profiles:
 
 Alanna Tai: https://github.com/alannatai
