@@ -1,12 +1,24 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h3>Edit <span class="user-name">{{ member.username }}</span> Details</h3>
-  <form action="" method="post">
-    {% csrf_token %}
-    <table>
-      {{ form.as_table }}
-    </table>
-    <input type="submit" value="Save" class="btn">
-  </form>
+<div class="row">
+  <div class="col s2">
+    <img class="circle responsive-img" src="/static/images/no_avatar.webp">
+  </div>
+  <div class="col s10">
+    <h3>Edit <span class="user-name">{{ member.username }}</span> Details</h3>
+
+  </div>
+  <div class="col s12">
+    <a href="#avatar-upload" class="btn blue lighten-1">Upload Avatar</a>
+    <form action="" method="post">
+      {% csrf_token %}
+      <table>
+        {{ form.as_table }}
+      </table>
+      <input type="submit" value="Save" class="btn">
+    </form>
+  </div>
+</div>
+
 {% endblock %}
