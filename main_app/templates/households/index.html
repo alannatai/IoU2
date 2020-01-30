@@ -2,7 +2,7 @@
 
 <h2>{{ user.username }}'s Households</h2>
 
-<a class="waves-effect waves-light btn" href="{% url 'households_create' %}">Add Household</a>
+<a class="green lighten-1 waves-effect waves-light btn" href="{% url 'households_create' %}">Add A New Household</a>
 <div class="row">
   <div class="col s12 m6">
     {% for household in households %}

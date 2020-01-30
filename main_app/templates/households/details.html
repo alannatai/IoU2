@@ -2,9 +2,9 @@
 {% block content %}
 {% load filters %}
 
-<h2>{{ household.name }}</h2>
-<a class="waves-effect waves-light btn modal-trigger"href="#modal1">ADD EXPENSE</a>
-<a class="waves-effect waves-light btn{% if not is_admin %} disabled{% endif %}" href="{% url 'households_update' household.id %}">Edit Household</a>
+<h2>{{ household.name }} - Total Expenses</h2>
+<a class="green lighten-2 waves-effect waves-light btn modal-trigger"href="#modal1">ADD EXPENSE</a>
+<a class="blue darken-3 waves-effect waves-light btn{% if not is_admin %} disabled{% endif %}" href="{% url 'households_update' household.id %}">Edit Household</a>
 <!-- Add Expense Modal -->
 <div class="row">
   <div class="col s7">
@@ -13,11 +13,11 @@
         <div class="modal-header right">
           <a href="#!" class="modal-close waves-effect waves-red btn-flat">&#10005;</a>
         </div>
-        <h4>Add an expense to {{ household.name }}</h4>
+        <h4>Add an expense to {{ household.name }}</h4><br/>
         <form action="{% url 'add_expense' household.id %}" method="post">
           {% csrf_token %}
           {{ expense_form.as_p }}
-          <input type="submit" class="btn" value="Add Expense">
+          <input type="submit" class="green lighten-1 btn" value="Add to {{household.name}}"><br/>
         </form>
       </div>
     </div>
@@ -33,7 +33,7 @@
           <br/>
         </div>
         <div class="card-action">
-          <a class="modal-trigger" href="#{{expense.name}}">Details</a>
+          <a class="modal-trigger" href="#{{expense.name}}">view expense details</a>
         </div>
       </div>
       <!-- View Expense Details Modal -->
@@ -46,15 +46,15 @@
               </div>
               <h4>{{ expense.name }} Details</h4>
               <hr/>
-              <p>Who paid: {{ expense.member.username }}</p>
-              <p>Cost: ${{ expense.cost|floatformat:2 }}</p>
-              <p>Desc: {{ expense.description }}</p>
-              <br/>
+              <p>created by: <br/>{{ expense.member.username }}</p><br/>
+              <p>Cost: <br/>${{ expense.cost|floatformat:2 }}</p></br>
+              <p>Description: <br/>{{ expense.description }}</p></br>
+              <p>Activity Log:<br/>
               <p>[{{expense.date}}] - {{expense.member.username}} added {{expense.name}} for ${{expense.cost|floatformat:2}}.</p>
               <br/>
               <div class="card-action">
-                <a class="modal-trigger" href="#{{expense.name}}/edit">Edit</a>
-                <a class="modal-trigger" href="#{{expense.name}}/delete">Delete</a>
+                <a class="left modal-trigger" href="#{{expense.name}}/edit">Edit "{{expense.name}}"</a>
+                <a class="right modal-trigger" href="#{{expense.name}}/delete">Delete {{expense.name}} from "{{household.name}}"</a>
                 
 
                 <!-- Edit Expense Modal -->
@@ -92,7 +92,7 @@
                                 </tr>
                               </tbody>
                               </table>
-                              <input type="submit" class="btn" value="Update {{ expense.name }}">
+                              <input type="submit" class="green lighten-2 btn" value="Update {{ expense.name }}">
                             </form>
                           </div>
                         </div>
@@ -109,15 +109,15 @@
                         </div>
                         <h4>Delete {{ expense.name }} </h4>
                         <hr/>
-                        <p>Are you sure you want to remove {{expense.name}}(${{expense.cost|floatformat:2}}) from {{household.name}}?</p>
+                        <p>Are you sure you want to remove {{expense.name}}(${{expense.cost|floatformat:2}}) from "{{household.name}}"?</p>
                         <br/>
                         <br/>
                         <div class="card-action">
                           <div class="left">
-                            <a href="{% url 'remove_expense' household.id expense.id %}">yes, please Remove</a>
+                            <a href="{% url 'remove_expense' household.id expense.id %}">YES, REMOVE {{expense.name}} from this household.</a>
                           </div>
                           <div class="right">
-                            <a href="#" class="modal-close">Cancel</a>
+                            <a href="#" class="modal-close">CANCEL</a>
                           </div>
                       
                       {% comment %} <div class="card">
@@ -166,7 +166,7 @@
                   </article>
                   {% if amount < 0 %}
                       <span class="right">
-                          <a href="{% url 'has_paid' household.id ledger_member.id %}" onclick="return confirm('Are you sure?')" class="waves-effect waves-light btn-small">Paid</a>
+                          <a href="{% url 'has_paid' household.id ledger_member.id %}" onclick="return confirm('Are you sure?')" class="green lighten-2 waves-effect waves-light btn-small">mark as Paid</a>
                       </span>
                   {% endif %}
               </div> 
@@ -182,7 +182,7 @@
                                         {{ split.member.username }} owes you ${{ split.amount_owed|floatformat:2 }} for {{ split.expense.name }}
                                     {% endif %}
                                     {% if split.member == ledger_member and amount < 0 %}
-                                        <a href="{% url 'has_paid_split' household.id split.id %}" onclick="return confirm('Are you sure?')">Paid</a>
+                                        <div class="right"><a href="{% url 'has_paid_split' household.id split.id %}" onclick="return confirm('Are you sure?')">PAID</a></div>
                                     {% endif %}
                                 </li>
                             {% endfor %}
