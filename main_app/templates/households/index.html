@@ -10,8 +10,13 @@
       <div class="card-content">
         <span class="card-title">{{ household.name }}</span>
       </div>
-      <div class="card-action">
+      <div class="card-action household-action">
         <a href="{% url 'households_details' household.id %}">View Household Details</a>
+        <div class="right-align">
+          {% for member in household.members.all %}
+            <i class="material-icons">face</i>
+          {% endfor %}
+        </div>
       </div>
     </div>
     {% endfor %}
