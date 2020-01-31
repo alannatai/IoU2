@@ -14,7 +14,7 @@ h1, h2 {
 h3, h4, h5 {
   font-weight: 200;
   font-family: 'Noto Serif SC', serif;
-} 
+}
 
 main {
   padding-top: 50px;
@@ -36,7 +36,7 @@ nav .button-collapse i {
 }
 
 nav .brand-logo {
-  font-size: 2rem; 
+  font-size: 2rem;
 }
 
 @media only screen and (min-width: 601px){
@@ -68,6 +68,12 @@ nav ul a {
 .card .card-content {
   padding: 24px 24px 48px 24px;
   border-radius: 0 0 2px 2px;
+}
+
+.card-action.expense-details {
+  display: block;
+  font-weight: 300;
+  text-transform: uppercase;
 }
 
 .centered {
@@ -216,6 +222,10 @@ nav .brand-logo {
 
 .aboutimg {
   border: 3px grey solid;
+}
+
+.member-button {
+  cursor: default;
 }
 
 @media screen and (min-width: 601px) {
