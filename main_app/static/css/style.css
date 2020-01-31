@@ -96,6 +96,9 @@ nav ul a {
   color: white;
   background-color:rgba(78, 94, 128, 0.5);
 }
+.collapsible.popout>li {
+  margin: 0;
+}
 
 .collapsible > li:not(:first-child) {
   margin-top: 20px;
@@ -116,7 +119,21 @@ nav ul a {
 
 .modal {
   width: 75% !important;
-  height: 75% !important;
+  /* height: 75% !important; */
+  padding: 20px;
+}
+
+.modal .modal-footer {
+  border-top: 1px solid rgba(160,160,160,0.2);
+  padding: 16px 24px;
+}
+
+.modal .modal-footer a {
+  color: #ffab40;
+  margin-right: 24px;
+  -webkit-transition: color .3s ease;
+  transition: color .3s ease;
+  text-transform: uppercase;
 }
 
 .card {
@@ -125,6 +142,12 @@ nav ul a {
 }
 
 .household-action {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.detail-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
