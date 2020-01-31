@@ -30,7 +30,7 @@
                     {% if user.is_authenticated %}
                         <li><a href="{% url 'households_index' %}">My Households</a></li>
                         <li><a href="{% url 'logout' %}">Log Out</a></li>
-                        <li><a class="avatar-container" href="{% url 'user_update' user.id %}"><img class="circle avatar--small" src="{{ user.avatar }}"/></a></li>
+                        <li><a class="avatar-container" href="{% url 'user_update' user.id %}"><span>{{ user.username }}</span><img class="circle avatar--small" src="{{ user.avatar }}"/></a></li>
                     {% else %}
                         <li><a href="{% url 'signup' %}">Sign Up</a></li>
                         <li><a href="{% url 'login' %}">Log In</a></li>
@@ -41,7 +41,12 @@
     </header>
     <ul class="sidenav" id="mobile-nav">
       {% if user.is_authenticated %}
-          <li><a class="avatar-container" href="{% url 'user_update' user.id %}"><img class="circle avatar--small" src="{{ user.avatar }}"/></a></li>
+          <li>
+            <a class="avatar-container" href="{% url 'user_update' user.id %}">
+              <span>{{ user.username }}</span>
+              <img class="circle avatar--small" src="{{ user.avatar }}"/>
+            </a>
+          </li>
           <li><a href="/about">About IOU&#178;</a></li>
           <li><a href="{% url 'households_index' %}">My Households</a></li>
           <li><a href="{% url 'logout' %}">Log Out</a></li>
