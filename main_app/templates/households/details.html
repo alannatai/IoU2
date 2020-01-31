@@ -21,7 +21,7 @@
 <div class="row">
   <div class="col s12">
     <div class="detail-header">
-      <h1>{{ household.name }} <a id="member-button" class="member-button tooltipped" data-position="right" data-tooltip="{% for household_member in household_members %}{{ household_member.username }} . {% endfor %}"><i class="small material-icons">group</i></a></h1>
+      <h1>{{ household.name }} <a id="member-button" class="member-button tooltipped" data-position="right" data-tooltip="{% for household_member in household_members %}{{ household_member.username }}&nbsp;&nbsp;&nbsp;{% endfor %}"><i class="small material-icons">group</i></a></h1>
       <a class="indigo darken-3 waves-effect waves-light btn{% if not is_admin %} disabled{% endif %}" href="{% url 'households_update' household.id %}">  <i class="material-icons">settings</i></a>
     </div>
   </div>
