@@ -25,8 +25,8 @@
                 </ul>
                 <a href="#" data-target="mobile-nav" class="sidenav-trigger right"><i class="material-icons">menu</i></a>
                 <ul class="right hide-on-med-and-down">
-                    {% if user.is_authenticated %}
                         <li><a href="/about">About IOU&#178;</a></li>
+                    {% if user.is_authenticated %}
                         <li><a href="{% url 'households_index' %}">My Households</a></li>
                         <li><a href="{% url 'logout' %}">Log Out</a></li>
                         <li><a class="avatar-container" href="{% url 'user_update' user.id %}"><img class="circle avatar--small" src="{{ user.avatar }}"/></a></li>
