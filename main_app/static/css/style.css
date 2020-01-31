@@ -14,7 +14,7 @@ h1, h2 {
 h3, h4, h5 {
   font-weight: 200;
   font-family: 'Noto Serif SC', serif;
-} 
+}
 
 main {
   padding-top: 50px;
@@ -36,7 +36,7 @@ nav .button-collapse i {
 }
 
 nav .brand-logo {
-  font-size: 2rem; 
+  font-size: 2rem;
 }
 
 @media only screen and (min-width: 601px){
@@ -216,6 +216,10 @@ nav .brand-logo {
 
 .aboutimg {
   border: 3px grey solid;
+}
+
+.member-button {
+  cursor: default;
 }
 
 @media screen and (min-width: 601px) {
