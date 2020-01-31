@@ -204,16 +204,16 @@ nav ul a {
 }
 
 nav .brand-logo {
-  height: 56px;
+  height: 75px;
 }
 .brand-logo > img {
   padding-top: 6px;
-  height: 56px;
+  height: 70px;
 }
 
 .avatar-container {
   padding-top: 6px;
-  height: 56px;
+  height: 75px;
 }
 
 .sidenav li>a.avatar-container {
@@ -229,15 +229,6 @@ nav .brand-logo {
 }
 
 @media screen and (min-width: 601px) {
-  nav .brand-logo {
-    height: 64px;
-  }
-  .brand-logo > img {
-    height: 64px;
-  }
-  .avatar-container {
-    height: 64px;
-  }
   .avatar--small {
     margin-top: 6px;
   }
