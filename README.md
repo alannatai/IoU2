@@ -1,4 +1,4 @@
-# IoU2
+<img src="https://i.imgur.com/kde7p1D.png">
 
 ## Technologies Used
 
@@ -63,6 +63,9 @@ https://iou2.herokuapp.com/
 ## Developer Profiles:
 
 <a href="https://github.com/alannatai">Alanna Tai's Github</a>
+
 <a href="https://github.com/cojbr">Cody Breen's Github</a>
+
 <a href="https://github.com/emilykchow">Emily Chow's Github</a>
+
 <a href="https://github.com/louis-pham">Louis Pham's Github</a>
