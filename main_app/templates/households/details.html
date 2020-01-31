@@ -83,7 +83,10 @@
             <div class="card-content indigo lighten-5">
               <span class="card-title left">{{ expense.name }}</span><span class="card-title right">${{ expense.cost|floatformat:2 }}
                 <br>
-                <span class="right" style="font-size: 12px">{{ expense.member.username }}</span>
+                <div class="right expense-user">
+                  <span style="font-size: 12px">{{ expense.member.username }}</span> 
+                  <img class=" avatar--tiny" src="{{ expense.member.avatar }}"/>
+                </div>
               </span>
               <br/>
             </div>
