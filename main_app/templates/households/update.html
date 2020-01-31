@@ -8,8 +8,8 @@
     <form action="{% url 'households_update' household.id %}" method="post">
       {% csrf_token %}
       {{ household_form.as_p }}<br/>
-      <input type="submit" class="btn green lighten-2" value="Update {{household.name}}"">
-      <a href="#confirm-modal" class="btn red darken-1 modal-trigger">Delete {{household.name}}</a><br/><br/> 
+      <input type="submit" class="btn green lighten-2" value="Update {{household.name}}">
+      <a href="#confirm-modal" id="second-button" class="btn pink darken-1 modal-trigger">Delete {{household.name}}</a><br/><br/> 
     </form>
   </div>
 </div>

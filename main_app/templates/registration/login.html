@@ -2,14 +2,14 @@
 
 {% block content %}
 
-  <h2>Restore balance in your life.</h2>
-  <h3>Log in below.</h3>
+  <h2 style="font-weight:300;">Restore balance in your life.</h2>
+  <h4>Log in below.</h4>
 
 
   <form method="post" action="{% url 'login' %}">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" class="blue-grey btn" value="Login">
+    <input type="submit" class="green lighten-1 btn" value="Login">
     <input type="hidden" name="next" value="{{ next }}">
   </form>
   <br/>

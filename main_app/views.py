@@ -156,6 +156,7 @@ class HouseholdCreate(LoginRequiredMixin, CreateView):
 @login_required
 def households_details(request, household_id):
     household = Household.objects.get(pk=household_id)
+    household_members = Member.objects.filter(households=household_id)
 
     if request.user.has_perm("view_household", household):
         expense_form = ExpenseForm()
@@ -182,6 +183,7 @@ def households_details(request, household_id):
             'user': request.user,
             "is_admin": is_admin,
             'household': household,
+            'household_members': household_members,
             'expenses': expenses,
             'expense_form': expense_form,
             'ledger': sorted_ledger,

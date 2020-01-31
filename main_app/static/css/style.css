@@ -6,22 +6,54 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 
-h2 {
-  font-family: 'Ubuntu', sans-serif;
-  margin: 0 0 20px;
+h1, h2 {
+  font-family: 'Noto Serif SC', serif;
+  margin: 10px 0 30px;
 }
+
+h3, h4, h5 {
+  font-weight: 200;
+  font-family: 'Noto Serif SC', serif;
+} 
 
 main {
   padding-top: 50px;
+}
+
+nav {
+  height: 75px;
+  line-height: 75px;
+}
+
+nav i, nav [class^="mdi-"], nav [class*="mdi-"], nav i.material-icons {
+  height: 75px;
+  line-height: 75px;
+}
+
+nav .button-collapse i {
+  height: 75px;
+  line-height: 75px;
+}
+
+nav .brand-logo {
+  font-size: 2rem; 
+}
+
+@media only screen and (min-width: 601px){
+  nav, nav .nav-wrapper i, nav a.button-collapse, nav a.button-collapse i {
+      height: 75px;
+      line-height: 75px;
+  }
 }
 
 nav ul a {
   -webkit-transition: background-color 0.3s;
   transition: background-color 0.3s;
   font-size: 15px;
+  font-weight: 300;
   color: white;
   display: block;
-  padding: 0 15px;
+  padding: 0 20px;
   cursor: pointer;
 }
 
@@ -169,10 +201,12 @@ nav .brand-logo {
   height: 56px;
 }
 .brand-logo > img {
+  padding-top: 6px;
   height: 56px;
 }
 
 .avatar-container {
+  padding-top: 6px;
   height: 56px;
 }
 
@@ -197,4 +231,37 @@ nav .brand-logo {
   .avatar--small {
     margin-top: 6px;
   }
+}
+
+#ledger-num {
+  font-family: 'Merriweather', serif;
+}
+
+.ledger-text {
+  font-weight: 300;
+}
+
+#paid-button {
+  margin: 10px;
+}
+
+#create-household-button {
+  margin-top: -30px;
+}
+
+#edit-user-title {
+  font-family: 'Noto Serif SC', serif;
+}
+
+#member-button {
+  font-weight: bolder;
+  color: #81c784;
+  text-shadow: 2px 2px 8px rgb(209, 209, 209)
+}
+
+#member-button:hover {
+  font-weight: bolder;
+  cursor: pointer;
+  color: #c5cae9;
+  text-shadow: none;
 }
