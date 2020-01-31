@@ -155,7 +155,7 @@
                   </article>
                   {% if amount < 0 %}
                       <span class="right">
-                          <a href="{% url 'has_paid' household.id ledger_member.id %}" onclick="return confirm('Are you sure?')" class="green lighten-2 waves-effect waves-light btn-small">mark as Paid</a>
+                          <a href="{% url 'has_paid' household.id ledger_member.id %}" onclick="return confirm('Are you sure?')" class="green lighten-2 waves-effect waves-light btn-small">Paid</a>
                       </span>
                   {% endif %}
               </div> 

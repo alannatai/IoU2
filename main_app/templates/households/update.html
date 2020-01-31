@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>Edit "{{ household.name }}"</h1>
+<h1>Edit {{ household.name }}</h1>
 
 <div class="row">
   <div class="col s12">
     <form action="{% url 'households_update' household.id %}" method="post">
       {% csrf_token %}
       {{ household_form.as_p }}<br/>
-      <input type="submit" class="btn" value="Update {{household.name}}">
+      <input type="submit" class="btn green lighten-2" value="Update {{household.name}}"">
       <a href="#confirm-modal" class="btn red darken-1 modal-trigger">Delete {{household.name}}</a><br/><br/> 
     </form>
   </div>
@@ -19,12 +19,12 @@
   <div class="card">
     <div class="card-content">
       <div class="modal-content">
-        <h4>Delete <span class="indigo-text">{{ household.name }}</span></h4>
-        <p>Are you sure? Deleting a household is a <b>permanent</b> action and <b>cannot be undone.</b></p>
+        <h4>Delete <span class="indigo-text">{{ household.name }}</span><a href="#!" class="right modal-close waves-effect waves-red btn-flat">&#10005;</a></h4><hr/>
+        <p>Are you sure? Deleting a household is a permanent action and <u>cannot be undone.</u></p>
       </div>
     <div class="modal-footer">
       <a href="{% url 'households_delete' household.id %}" class="left white-text modal-close btn red darken-1">Delete {{household.name}} forever</a>
-      <a href="#!" class="right white-text modal-close btn blue-grey darken-1">Return to {{household.name}} page</a>
+      <a href="#!" class="right white-text modal-close btn blue darken-1">CLOSE</a>
     </div>
   </div>
 </div>
