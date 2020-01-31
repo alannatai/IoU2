@@ -1,32 +1,48 @@
 {% extends 'base.html' %} {% block content %}
 
-<h1><strong>About</strong></h1>
+<h2><strong>Welcome to IOU&#178;!</strong></h2>
+<h5>We are eliminating awkward conversations about who owes who. No more tit for tat.</h5><br>
+
 <hr>
+<p>And just so you know, this webapp isn't just for households; it can used however you like!</p>
+<p>For example, if you want to keep track of splitting money for a trip or other ways, you can also create a "household" with you and other members.</p><hr/>
 
-<p>Welcome to the webapp that allows us to keep track of our expenses and save time calculating how much money to pay one another.</p>
+<h4>Let's get started and walk you through how to use the app.</h4><br/>
 
+<article>
+<h5><u>My Households</u></h5>
+<p>When you click on "My Households" tab at the top, you will be able to view all the households that you are a part of. Create a new household if this is your first time around.</p>
+<img class="aboutimg" src="https://i.imgur.com/D4Ndi7i.png">
+</article>
 
-<h4>My Households</h4>
+</article>
+<h5><u>Edit Household</u></h5>
+<p>Once you've created your household, you can now view your household dashboard by clicking on "VIEW HOUSEHOLD DASHBOARD". Here is where you can edit your household and add other members to your household. 
+<u>Please note: the creator of the household cannot be removed from it.</u></p>
+<img class="aboutimg" src="https://i.imgur.com/oLD52a0.png">
+</article>
 
-When you click on "My Households" tab at the top, you will be able to view all the households that you are apart of.</p>
+</article>
+<h5><u>Add Expenses</u></h5>
+<p>When you incur an expense, such as an electricity bill or even your monthly rent, you can use "ADD EXPENSE" to enter that expense to the household.</p>
+<img class="aboutimg" src="https://i.imgur.com/RJsslQJ.png">
+</article>
 
-This webapp isn't neccessarily only for households, it can used for however you like, for example if you want to keep track of splitting money for a trip or other ways, you can also create a "household" with you and other members.</p>
+</article>
+<h5><u>Keeping Track Of Who Owes You Money</u></h5>
+<p>Once your household is created and you've listed an expense, you will see the expense's cost split on the right side of the page.</p>
 
+<p>As more expenses are added by other users, the ledger will calculate how much everyone is owed, based on who paid for the expense and who is still oweing on it.</p>
 
-<h4>Edit Household</h4>
+<p>Once one of your household members has paid up on the expense, you can click on "PAID" to remove them from the split.</p>
+<img class="aboutimg" src="https://i.imgur.com/ZANOv8R.png">
 
-<p>Once you click into your household, you will have an option to edit your household where you can change the name of the household or removing members. The admin/superuser will not be able to remove themselves off the household, they would have to delete the whole household.</p>
+</article>
 
+<hr/>
 
-<h4>Add Expense</h4>
-
-<p>When you buy an expense, you can click on "ADD EXPENSE" button where you will be prompted to enter the name of the expense, cost and description.</p>
-
-<h4>Keeping Track Of Who Owes You Money</h4>
-
-<p>Once that is submitted, the cost of the expense will be split evenly to all the other household members and it will show how much money each person owes you(as you can see on the right side of the page).</p>
-
-<p>Once the balance is no longer negative, it means that person no longer owes you anything and you can click on "PAID" to keep track. If you were added to the household later, the expense from previously will not be added to your total.</p>
+<h5>That's all, folks! Hope you enjoyed the walkthrough! <br/><br/>
+If you have any questions about the app, or if you find a bug, let us know below!</h5><br/><hr/>
 
 <div>
     {% comment %} <img src="https://i.imgur.com/Zkl7l0d.jpg"> {% endcomment %}
@@ -74,7 +90,7 @@ This webapp isn't neccessarily only for households, it can used for however you 
       <hr>
     </div>
     <div class="parallax-container">
-      <div class="parallax"><img src="https://i.imgur.com/25CLqQb.jpg"></div>
+      <div class="parallax"><img src="https://i.imgur.com/Sc7Ree4.jpg"></div>
     </div>
 
     <div class="section white">

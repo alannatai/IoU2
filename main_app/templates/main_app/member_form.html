@@ -1,13 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<br/>
 <div class="row">
   <div class="col s8 offset-s2 m4 centered">
     <!-- /static/images/no_avatar.webp -->
     <a href="#avatar-upload" class="circle modal-trigger avatar-upload">
       <img class="circle avatar" src="{{ member.avatar }}">
       <i class="material-icons small avatar-upload__icon">add</i>
-    </a>
+    </a><br/>
 
   </div>
   <div class="col s12 m8">
@@ -18,8 +19,8 @@
       {% csrf_token %}
       <table>
         {{ form.as_table }}
-      </table>
-      <input type="submit" value="Save" class="btn">
+      </table><br/>
+      <input type="submit" value="Save and update" class="btn green lighten-1">
     </form>
   </div>
 </div>
