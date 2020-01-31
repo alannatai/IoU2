@@ -12,10 +12,10 @@
           <span class="card-title">{{ household.name }}</span>
         </div>
         <div class="card-action household-action">
-          <a href="{% url 'households_details' household.id %}">View Household Details</a>
+          <a class="indigo-text text-lighten-3" href="{% url 'households_details' household.id %}">View Household Details</a>
           <div class="right-align">
             {% for member in household.members.all %}
-              <i class="material-icons">face</i>
+              <i class="material-icons indigo-text text-darken-4">face</i>
             {% endfor %}
           </div>
         </div>
