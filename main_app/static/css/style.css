@@ -70,6 +70,12 @@ nav ul a {
   border-radius: 0 0 2px 2px;
 }
 
+.card-action.expense-details {
+  display: block;
+  font-weight: 300;
+  text-transform: uppercase;
+}
+
 .centered {
   display: flex;
   flex-direction: column;
