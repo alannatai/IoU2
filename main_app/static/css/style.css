@@ -107,7 +107,21 @@ nav ul a {
 
 .modal {
   width: 75% !important;
-  height: 75% !important;
+  /* height: 75% !important; */
+  padding: 20px;
+}
+
+.modal .modal-footer {
+  border-top: 1px solid rgba(160,160,160,0.2);
+  padding: 16px 24px;
+}
+
+.modal .modal-footer a {
+  color: #ffab40;
+  margin-right: 24px;
+  -webkit-transition: color .3s ease;
+  transition: color .3s ease;
+  text-transform: uppercase;
 }
 
 .card {
