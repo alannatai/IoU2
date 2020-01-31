@@ -7,42 +7,42 @@
 - Python
 - Django
 - PSQL
+- Amazon S3
+- Javascript
 
 ## About
 
 Welcome to the webapp that allows people to keep track of their expenses and save time calculating how much money to pay one another.
 
-## Home Page
+And just so you know, this webapp isn't just for households; it can be used however you like!
+For example, if you want to keep track of splitting money for a trip or other ways, you can also create a "household" with you and other members.
+
+Let's get started and walk you through how to use the app.
 
 ## My Households
 
-When you click on "My Households" tab at the top, you will be able to view all the households that you are apart of.
-
-This webapp isn't neccessarily only for households, it can used for however you like, for example if you want to keep track of splitting money for a trip or other ways, you can also create a "household" with you and other members.
-
-<img src="https://i.imgur.com/zdlQVho.png">
+When you click on "My Households" tab at the top, you will be able to view all the households that you are a part of. Create a new household if this is your first time around.
+<img src="https://i.imgur.com/D4Ndi7i.png">
 
 ## Edit Household
 
-Once you click into your household, you will have an option to edit your household where you can change the name of the household or removing members. The admin/superuser will not be able to remove themselves off the household, they would have to delete the whole household.
+Once you've created your household, you can now view your household dashboard by clicking on "VIEW HOUSEHOLD DASHBOARD". Here is where you can edit your household and add other members to your household.
+<u>Please note: the creator of the household cannot be removed from it.
+<img src="https://i.imgur.com/oLD52a0.png">
 
-<img src="https://i.imgur.com/tvxnhrZ.png">
+## Add Expenses
 
-## Add Expense
-
-When you buy an expense, you can click on "ADD EXPENSE" button where you will be prompted to enter the name of the expense, cost and description.
-
-<img src="https://i.imgur.com/dcgfk27.png">
+When you incur an expense, such as an electricity bill or even your monthly rent, you can use "ADD EXPENSE" to enter that expense to the household.
+<img src="https://i.imgur.com/RJsslQJ.png">
 
 ## Keeping Track Of Who Owes You Money
 
-Once that is submitted, the cost of the expense will be split evenly to all the other household members and it will show how much money each person owes you(as you can see on the right side of the page).
+Once your household is created and you've listed an expense, you will see the expense's cost split on the right side of the page.
 
-<img src="https://i.imgur.com/9vyTZlY.png">
+As more expenses are added by other users, the ledger will calculate how much everyone is owed, based on who paid for the expense and who is still oweing on it.
 
-Once the balance is no longer negative, it means that person no longer owes you anything and you can click on "PAID" to keep track. If you were added to the household later, the expense from previously will not be added to your total.
-
-<img src="https://i.imgur.com/EqDwzz6.png">
+Once one of your household members has paid their share on the expense, you can click on "PAID" to remove them from the split.
+<img src="https://i.imgur.com/ZANOv8R.png">
 
 ## Next Steps
 
@@ -62,7 +62,7 @@ https://iou2.herokuapp.com/
 
 ## Developer Profiles:
 
-<a href="https://github.com/alannatai">Alanna Tai's Github<a/>
-<a href="https://github.com/cojbr">Cody Breen's Github<a/>
-<a href="https://github.com/emilykchow">Emily Chow's Github<a/>
-<a href="https://github.com/louis-pham">Louis Pham's Github<a/>
+<a href="https://github.com/alannatai">Alanna Tai's Github</a>
+<a href="https://github.com/cojbr">Cody Breen's Github</a>
+<a href="https://github.com/emilykchow">Emily Chow's Github</a>
+<a href="https://github.com/louis-pham">Louis Pham's Github</a>
